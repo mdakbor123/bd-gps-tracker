@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -7,79 +6,37 @@
 <title>BD GPS Tracker</title>
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;
- font-family:Arial,sans-serif;
- background:#eef4ff;
- color:#17345e;
-}
-.container{
- max-width:420px;
- margin:45px auto;
- padding:20px;
-}
-.card{
- background:white;
- padding:28px 22px;
- border-radius:18px;
- box-shadow:0 5px 25px #0001;
- text-align:center;
-}
+body{margin:0;font-family:Arial,sans-serif;background:#eef4ff;color:#17345e}
+.container{max-width:420px;margin:45px auto;padding:20px}
+.card{background:white;padding:28px 22px;border-radius:18px;box-shadow:0 5px 25px #0001;text-align:center}
 .logo{font-size:45px}
 h2{color:#1264d8}
 p{color:#65758b}
-input,button{
- width:100%;
- padding:14px;
- margin:8px 0;
- border-radius:9px;
- font-size:16px;
-}
+input,button{width:100%;padding:14px;margin:8px 0;border-radius:9px;font-size:16px}
 input{border:1px solid #ccd8e8}
-button{
- border:0;
- background:#1264d8;
- color:white;
- font-weight:bold;
-}
-.google{
- background:white;
- color:#333;
- border:1px solid #ccd8e8;
-}
-#status{
- font-size:14px;
- overflow-wrap:anywhere;
- margin-top:15px;
-}
+button{border:0;background:#1264d8;color:white;font-weight:bold}
+.google{background:white;color:#333;border:1px solid #ccd8e8}
+#status{font-size:14px;overflow-wrap:anywhere;margin-top:15px}
 </style>
 </head>
 <body>
-
 <div class="container">
 <div class="card">
-
 <div class="logo">📍</div>
 <h2>BD GPS Tracker</h2>
 <p>নিরাপদ লোকেশন ট্র্যাকিং সিস্টেম</p>
-
 <input id="email" type="email" placeholder="Email address">
 <input id="password" type="password" placeholder="Password">
-
 <button onclick="login()">Login</button>
 <button onclick="register()">Create Account</button>
 <button class="google" onclick="googleLogin()">Continue with Google</button>
 <button onclick="logout()">Logout</button>
-
 <div id="status">Firebase সংযোগের অপেক্ষায়...</div>
-
 </div>
 </div>
 
 <script type="module">
-
-import { initializeApp } from
-"https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 
 import {
 getAuth,
@@ -90,14 +47,9 @@ signInWithRedirect,
 getRedirectResult,
 onAuthStateChanged,
 signOut
-} from
-"https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-import {
-getDatabase,
-ref,
-set
-} from
+import {getDatabase,ref,set} from
 "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 const firebaseConfig = {
@@ -117,81 +69,71 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 const provider = new GoogleAuthProvider();
-
 const status = document.getElementById("status");
 
 window.login = async function(){
-try {
-const email = document.getElementById("email").value.trim();
-const password = document.getElementById("password").value;
-
+try{
+const email=document.getElementById("email").value.trim();
+const password=document.getElementById("password").value;
 await signInWithEmailAndPassword(auth,email,password);
-
-} catch(e) {
-status.innerText = "Login Error: " + e.message;
+}catch(e){
+status.innerText="Login Error: "+e.message;
 }
 };
 
 window.register = async function(){
-try {
-const email = document.getElementById("email").value.trim();
-const password = document.getElementById("password").value;
-
+try{
+const email=document.getElementById("email").value.trim();
+const password=document.getElementById("password").value;
 await createUserWithEmailAndPassword(auth,email,password);
-
-} catch(e) {
-status.innerText = "Register Error: " + e.message;
+}catch(e){
+status.innerText="Register Error: "+e.message;
 }
 };
 
 window.googleLogin = async function(){
-try {
+try{
 await signInWithRedirect(auth,provider);
-} catch(e) {
-status.innerText = "Google Error: " + e.message;
+}catch(e){
+status.innerText="Google Error: "+e.message;
 }
 };
 
 window.logout = async function(){
-try {
+try{
 await signOut(auth);
-status.innerText = "আপনি Logout করেছেন";
-} catch(e) {
-status.innerText = e.message;
+status.innerText="আপনি Logout করেছেন";
+}catch(e){
+status.innerText=e.message;
 }
 };
 
-getRedirectResult(auth).catch(e => {
-status.innerText = "Google Login Error: " + e.message;
+getRedirectResult(auth).catch(e=>{
+status.innerText="Google Login Error: "+e.message;
 });
 
-onAuthStateChanged(auth, async (user) => {
-
-if (!user) {
-status.innerText = "Login করুন";
+onAuthStateChanged(auth,async user=>{
+if(!user){
+status.innerText="Login করুন";
 return;
 }
 
-if (user.uid === ADMIN_UID) {
-try {
-await set(ref(db,"users/" + user.uid),{
-email:user.email || "",
+if(user.uid===ADMIN_UID){
+try{
+await set(ref(db,"users/"+user.uid),{
+email:user.email||"",
 role:"admin",
 approved:true
 });
-
-status.innerText = "Admin Login সফল! Admin Profile প্রস্তুত।";
-
-} catch(e) {
-status.innerText = "Database Error: " + e.message;
+status.innerText="Admin Login সফল! Admin Profile প্রস্তুত।";
+}catch(e){
+status.innerText="Database Error: "+e.message;
 }
-
-} else {
-status.innerText = "Login হয়েছে। Admin অনুমোদনের অপেক্ষায়।";
+}else{
+status.innerText="Login হয়েছে। Admin অনুমোদনের অপেক্ষায়।";
 }
-
 });
-
 </script>
 </body>
 </html>
+
