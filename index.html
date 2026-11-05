@@ -7,22 +7,58 @@
 <title>BD GPS Tracker</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#eef4ff;color:#17345e}
-.container{max-width:420px;margin:55px auto;padding:25px}
-.card{background:white;padding:28px 22px;border-radius:18px;box-shadow:0 5px 25px #0001;text-align:center}
-.logo{font-size:42px}
-h2{color:#1264d8;margin-bottom:8px}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#eef4ff;
+ color:#17345e;
+}
+.container{
+ max-width:420px;
+ margin:45px auto;
+ padding:20px;
+}
+.card{
+ background:white;
+ padding:28px 22px;
+ border-radius:18px;
+ box-shadow:0 5px 25px #0001;
+ text-align:center;
+}
+.logo{font-size:45px}
+h2{color:#1264d8}
 p{color:#65758b}
-input,button{width:100%;padding:14px;margin:8px 0;border-radius:9px;font-size:16px}
+input,button{
+ width:100%;
+ padding:14px;
+ margin:8px 0;
+ border-radius:9px;
+ font-size:16px;
+}
 input{border:1px solid #ccd8e8}
-button{border:0;background:#1264d8;color:white;font-weight:bold}
-.google{background:white;color:#333;border:1px solid #ccd8e8}
-#status{font-size:14px;overflow-wrap:anywhere;margin-top:15px}
+button{
+ border:0;
+ background:#1264d8;
+ color:white;
+ font-weight:bold;
+}
+.google{
+ background:white;
+ color:#333;
+ border:1px solid #ccd8e8;
+}
+#status{
+ font-size:14px;
+ overflow-wrap:anywhere;
+ margin-top:15px;
+}
 </style>
 </head>
 <body>
+
 <div class="container">
 <div class="card">
+
 <div class="logo">📍</div>
 <h2>BD GPS Tracker</h2>
 <p>নিরাপদ লোকেশন ট্র্যাকিং সিস্টেম</p>
@@ -36,28 +72,36 @@ button{border:0;background:#1264d8;color:white;font-weight:bold}
 <button onclick="logout()">Logout</button>
 
 <div id="status">Firebase সংযোগের অপেক্ষায়...</div>
+
 </div>
 </div>
 
 <script type="module">
+
 import { initializeApp } from
 "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 
 import {
-getAuth, signInWithEmailAndPassword,
+getAuth,
+signInWithEmailAndPassword,
 createUserWithEmailAndPassword,
-GoogleAuthProvider, signInWithRedirect,
-getRedirectResult, onAuthStateChanged, signOut
+GoogleAuthProvider,
+signInWithRedirect,
+getRedirectResult,
+onAuthStateChanged,
+signOut
 } from
 "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
 import {
-getDatabase, ref, set
+getDatabase,
+ref,
+set
 } from
 "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 const firebaseConfig = {
-apiKey: "AIzaSyD7eyFrt6xzzWvrS5e0fXxKB3O97Q",
+apiKey: "AIzaSyD7eyFrt6xkzzWvrBGRsV5e0fXxKB3O97Q",
 authDomain: "bd-gps-tracker.firebaseapp.com",
 databaseURL: "https://bd-gps-tracker-default-rtdb.firebaseio.com",
 projectId: "bd-gps-tracker",
@@ -78,9 +122,11 @@ const status = document.getElementById("status");
 
 window.login = async function(){
 try {
-const email = document.getElementById("email").value;
+const email = document.getElementById("email").value.trim();
 const password = document.getElementById("password").value;
+
 await signInWithEmailAndPassword(auth,email,password);
+
 } catch(e) {
 status.innerText = "Login Error: " + e.message;
 }
@@ -88,9 +134,11 @@ status.innerText = "Login Error: " + e.message;
 
 window.register = async function(){
 try {
-const email = document.getElementById("email").value;
+const email = document.getElementById("email").value.trim();
 const password = document.getElementById("password").value;
+
 await createUserWithEmailAndPassword(auth,email,password);
+
 } catch(e) {
 status.innerText = "Register Error: " + e.message;
 }
@@ -118,28 +166,32 @@ status.innerText = "Google Login Error: " + e.message;
 });
 
 onAuthStateChanged(auth, async (user) => {
+
 if (!user) {
 status.innerText = "Login করুন";
 return;
 }
 
-status.innerText = "Login সফল! UID: " + user.uid;
-
 if (user.uid === ADMIN_UID) {
 try {
 await set(ref(db,"users/" + user.uid),{
-email: user.email || "",
-role: "admin",
-approved: true
+email:user.email || "",
+role:"admin",
+approved:true
 });
+
 status.innerText = "Admin Login সফল! Admin Profile প্রস্তুত।";
+
 } catch(e) {
 status.innerText = "Database Error: " + e.message;
 }
+
 } else {
 status.innerText = "Login হয়েছে। Admin অনুমোদনের অপেক্ষায়।";
 }
+
 });
+
 </script>
 </body>
 </html>
