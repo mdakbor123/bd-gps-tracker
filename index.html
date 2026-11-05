@@ -1,132 +1,72 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BD GPS Tracker</title>
-
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#eef4fc;
-  color:#183153;
-}
-header{
-  background:#0756b5;
-  color:white;
-  text-align:center;
-  padding:22px;
-}
-main{
-  max-width:430px;
-  margin:25px auto;
-  padding:15px;
-}
-.card{
-  background:white;
-  padding:22px;
-  border-radius:14px;
-  box-shadow:0 3px 15px #0001;
-}
-input,button{
-  width:100%;
-  padding:13px;
-  margin:8px 0;
-  border-radius:8px;
-  font-size:16px;
-}
-input{border:1px solid #ccd5e0}
-button{
-  border:0;
-  background:#0756b5;
-  color:white;
-  font-weight:bold;
-}
-.google{
-  background:white;
-  color:#333;
-  border:1px solid #ccc;
-}
-#status{
-  overflow-wrap:anywhere;
-  font-size:14px;
-}
+body{margin:0;font-family:Arial,sans-serif;background:#eef4ff;color:#17345e}
+.container{max-width:420px;margin:55px auto;padding:25px}
+.card{background:white;padding:28px 22px;border-radius:18px;box-shadow:0 5px 25px #0001;text-align:center}
+.logo{font-size:42px}
+h2{color:#1264d8;margin-bottom:8px}
+p{color:#65758b}
+input,button{width:100%;padding:14px;margin:8px 0;border-radius:9px;font-size:16px}
+input{border:1px solid #ccd8e8}
+button{border:0;background:#1264d8;color:white;font-weight:bold}
+.google{background:white;color:#333;border:1px solid #ccd8e8}
+#status{font-size:14px;overflow-wrap:anywhere;margin-top:15px}
 </style>
 </head>
-
 <body>
-
-<header>
-<h2>📍 BD GPS Tracker</h2>
-<p>বাংলাদেশ GPS Tracking System</p>
-</header>
-
-<main>
+<div class="container">
 <div class="card">
+<div class="logo">📍</div>
+<h2>BD GPS Tracker</h2>
+<p>নিরাপদ লোকেশন ট্র্যাকিং সিস্টেম</p>
 
-<h3>লগইন / Login</h3>
+<input id="email" type="email" placeholder="Email address">
+<input id="password" type="password" placeholder="Password">
 
-<input id="email" type="email"
-placeholder="আপনার Gmail / Email">
+<button onclick="login()">Login</button>
+<button onclick="register()">Create Account</button>
+<button class="google" onclick="googleLogin()">Continue with Google</button>
+<button onclick="logout()">Logout</button>
 
-<input id="password" type="password"
-placeholder="Password">
-
-<button id="register">নতুন অ্যাকাউন্ট / Register</button>
-
-<button id="login">লগইন / Login</button>
-
-<button id="google" class="google">
-Google দিয়ে Login
-</button>
-
-<button id="logout" hidden>Logout</button>
-
-<p id="status">আপনার অ্যাকাউন্ট দিয়ে প্রবেশ করুন।</p>
-
+<div id="status">Firebase সংযোগের অপেক্ষায়...</div>
 </div>
-</main>
+</div>
 
 <script type="module">
-
 import { initializeApp } from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+"https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 
 import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithRedirect,
-  getRedirectResult,
-  onAuthStateChanged,
-  signOut
+getAuth, signInWithEmailAndPassword,
+createUserWithEmailAndPassword,
+GoogleAuthProvider, signInWithRedirect,
+getRedirectResult, onAuthStateChanged, signOut
 } from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+"https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
 import {
-  getDatabase,
-  ref,
-  set
+getDatabase, ref, set
 } from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
+"https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD7eyFrt6kxzzWvrBGRsV5e0fXxKB3097Q",
-  authDomain: "bd-gps-tracker.firebaseapp.com",
-  databaseURL: "https://bd-gps-tracker-default-rtdb.firebaseio.com",
-  projectId: "bd-gps-tracker",
-  storageBucket: "bd-gps-tracker.firebasestorage.app",
-  messagingSenderId: "1055086540766",
-  appId: "1:1055086540766:web:7c6b8ca93b06098cb14f4f",
-  measurementId: "G-ZMSSHYR6SY"
+apiKey: "AIzaSyD7eyFrt6xzzWvrS5e0fXxKB3O97Q",
+authDomain: "bd-gps-tracker.firebaseapp.com",
+databaseURL: "https://bd-gps-tracker-default-rtdb.firebaseio.com",
+projectId: "bd-gps-tracker",
+storageBucket: "bd-gps-tracker.firebasestorage.app",
+messagingSenderId: "1055086540766",
+appId: "1:1055086540766:web:7c6b8ca93b06098cb14f4f",
+measurementId: "G-ZMSSHYR6SY"
 };
 
-
-// Admin UID
 const ADMIN_UID = "QthMB5DjNWge5JMk7BqtTy1KZEN2";
 
 const app = initializeApp(firebaseConfig);
@@ -135,115 +75,71 @@ const db = getDatabase(app);
 const provider = new GoogleAuthProvider();
 
 const status = document.getElementById("status");
-const logoutButton = document.getElementById("logout");
 
-
-// Register
-document.getElementById("register").onclick = async () => {
-  try {
-    await createUserWithEmailAndPassword(
-      auth,
-      document.getElementById("email").value,
-      document.getElementById("password").value
-    );
-
-    status.textContent = "অ্যাকাউন্ট তৈরি হয়েছে।";
-
-  } catch (error) {
-    status.textContent = error.message;
-  }
-};
-
-
-// Login
-document.getElementById("login").onclick = async () => {
-  try {
-    await signInWithEmailAndPassword(
-      auth,
-      document.getElementById("email").value,
-      document.getElementById("password").value
-    );
-
-    status.textContent = "লগইন সফল!";
-
-  } catch (error) {
-    status.textContent = error.message;
-  }
-};
-
-
-// Google Login
-document.getElementById("google").onclick = async () => {
-  try {
-    await signInWithRedirect(auth, provider);
-  } catch (error) {
-    status.textContent = error.message;
-  }
-};
-
-
-// Google Login Result
+window.login = async function(){
 try {
-  await getRedirectResult(auth);
-} catch (error) {
-  status.textContent = error.message;
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+await signInWithEmailAndPassword(auth,email,password);
+} catch(e) {
+status.innerText = "Login Error: " + e.message;
 }
+};
 
+window.register = async function(){
+try {
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+await createUserWithEmailAndPassword(auth,email,password);
+} catch(e) {
+status.innerText = "Register Error: " + e.message;
+}
+};
 
-// Login State and Admin Profile
-onAuthStateChanged(auth, async (user) => {
+window.googleLogin = async function(){
+try {
+await signInWithRedirect(auth,provider);
+} catch(e) {
+status.innerText = "Google Error: " + e.message;
+}
+};
 
-  logoutButton.hidden = !user;
+window.logout = async function(){
+try {
+await signOut(auth);
+status.innerText = "আপনি Logout করেছেন";
+} catch(e) {
+status.innerText = e.message;
+}
+};
 
-  if (!user) {
-    status.textContent = "আপনার অ্যাকাউন্ট দিয়ে প্রবেশ করুন।";
-    return;
-  }
-
-  status.textContent = "লগইন হয়েছে: " + user.email;
-
-  if (user.uid === ADMIN_UID) {
-
-    try {
-
-      await set(ref(db, "users/" + user.uid), {
-        name: user.displayName || "Admin",
-        email: user.email,
-        approved: true,
-        role: "admin"
-      });
-
-      status.textContent =
-        "Admin সফলভাবে প্রস্তুত হয়েছে!";
-
-    } catch (error) {
-
-      status.textContent =
-        "Admin Setup Error: " + error.message;
-
-    }
-
-  } else {
-
-    status.textContent =
-      "লগইন হয়েছে। Admin অনুমোদনের অপেক্ষায়।";
-
-  }
-
+getRedirectResult(auth).catch(e => {
+status.innerText = "Google Login Error: " + e.message;
 });
 
+onAuthStateChanged(auth, async (user) => {
+if (!user) {
+status.innerText = "Login করুন";
+return;
+}
 
-// Logout
-logoutButton.onclick = async () => {
-  try {
-    await signOut(auth);
-    status.textContent = "আপনি লগআউট করেছেন।";
-  } catch (error) {
-    status.textContent = error.message;
-  }
-};
+status.innerText = "Login সফল! UID: " + user.uid;
 
+if (user.uid === ADMIN_UID) {
+try {
+await set(ref(db,"users/" + user.uid),{
+email: user.email || "",
+role: "admin",
+approved: true
+});
+status.innerText = "Admin Login সফল! Admin Profile প্রস্তুত।";
+} catch(e) {
+status.innerText = "Database Error: " + e.message;
+}
+} else {
+status.innerText = "Login হয়েছে। Admin অনুমোদনের অপেক্ষায়।";
+}
+});
 </script>
-
 </body>
 </html>
