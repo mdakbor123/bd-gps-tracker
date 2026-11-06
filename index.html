@@ -1,0 +1,670 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1264d8">
+<title>BD GPS Tracker Global</title>
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#eef4fc;
+ color:#172b4d;
+}
+header{
+ background:#1264d8;
+ color:white;
+ padding:20px;
+ text-align:center;
+}
+header h2{margin:0}
+header p{margin:7px 0 0}
+.container{
+ max-width:650px;
+ margin:auto;
+ padding:12px;
+}
+.card{
+ background:white;
+ padding:17px;
+ border-radius:14px;
+ margin:13px 0;
+ box-shadow:0 3px 12px #0001;
+}
+h3{margin-top:0}
+button{
+ width:100%;
+ border:0;
+ border-radius:9px;
+ padding:13px;
+ margin-top:9px;
+ background:#1264d8;
+ color:white;
+ font-size:15px;
+ cursor:pointer;
+}
+button:disabled{opacity:.5}
+.secondary{background:#344b68}
+.danger{background:#d93030}
+input,select{
+ width:100%;
+ padding:13px;
+ border:1px solid #ccd6e5;
+ border-radius:8px;
+ margin:7px 0;
+ font-size:15px;
+}
+.value{
+ background:#edf4ff;
+ padding:12px;
+ border-radius:8px;
+ margin:9px 0;
+ overflow-wrap:anywhere;
+}
+.status{color:#1264d8;font-weight:bold}
+#map{
+ height:300px;
+ border-radius:10px;
+ z-index:1;
+}
+.small{font-size:12px;color:#667}
+.hidden{display:none}
+footer{text-align:center;padding:20px;color:#667}
+</style>
+</head>
+
+<body>
+
+<header>
+<h2>🌍 BD GPS Tracker</h2>
+<p id="subtitle">বাংলাদেশ ও বিশ্বব্যাপী GPS ট্র্যাকার</p>
+</header>
+
+<div class="container">
+
+<!-- LANGUAGE -->
+<div class="card">
+<h3>🌐 Language / ভাষা</h3>
+<select id="language" onchange="changeLanguage()">
+<option value="bn">বাংলা</option>
+<option value="en">English</option>
+</select>
+</div>
+
+<!-- GPS -->
+<div class="card">
+<h3 id="gpsHeading">📍 GPS Location</h3>
+<p id="gpsStatus" class="status">GPS বন্ধ আছে</p>
+
+<button id="startBtn" onclick="startTracking()">
+GPS চালু করুন
+</button>
+
+<button id="stopBtn" class="danger"
+onclick="stopTracking()" disabled>
+GPS বন্ধ করুন
+</button>
+
+<div class="value">
+Latitude
+<div id="latitude">---</div>
+</div>
+
+<div class="value">
+Longitude
+<div id="longitude">---</div>
+</div>
+
+<div class="value">
+Accuracy
+<div id="accuracy">---</div>
+</div>
+
+<div class="value">
+Last Updated
+<div id="updated">---</div>
+</div>
+
+<button class="secondary" onclick="copyLocation()">
+লোকেশন কপি করুন
+</button>
+
+<button onclick="openGoogleMaps()">
+Google Maps খুলুন
+</button>
+</div>
+
+<!-- MAP -->
+<div class="card">
+<h3>🗺️ Live Location Map</h3>
+<div id="map"></div>
+</div>
+
+<!-- FIREBASE -->
+<div class="card">
+<h3>🔥 Firebase Connection</h3>
+
+<p class="small">
+Firebase Console থেকে Web App Configuration সংগ্রহ করে
+নিচের ঘরগুলো পূরণ করুন।
+</p>
+
+<input id="apiKey" placeholder="Firebase API Key">
+<input id="authDomain" placeholder="Auth Domain">
+<input id="databaseURL" placeholder="Database URL">
+<input id="projectId" placeholder="Project ID">
+<input id="appId" placeholder="App ID">
+
+<button onclick="connectFirebase()">
+Firebase Connect
+</button>
+
+<p id="firebaseStatus" class="status">
+Firebase সংযুক্ত নয়
+</p>
+
+<button class="secondary" onclick="firebaseLogout()">
+Firebase Logout
+</button>
+</div>
+
+<!-- USER -->
+<div class="card">
+<h3>👤 User Account</h3>
+
+<input id="userName" placeholder="আপনার নাম">
+<input id="userEmail" type="email" placeholder="Email">
+<input id="userPassword" type="password"
+placeholder="Password (কমপক্ষে ৬ অক্ষর)">
+
+<button onclick="registerUser()">নতুন Account তৈরি</button>
+<button class="secondary" onclick="loginUser()">Login</button>
+<button class="danger" onclick="logoutUser()">Logout</button>
+
+<p id="userStatus" class="status">Login করা হয়নি</p>
+</div>
+
+<!-- ADMIN -->
+<div class="card">
+<h3>🛡️ Admin Panel</h3>
+<p>Admin Dashboard শুধুমাত্র অনুমোদিত Admin-এর জন্য।</p>
+
+<p id="adminStatus" class="status">
+Admin permission যাচাই করা হয়নি
+</p>
+
+<p class="small">
+নিরাপদ Admin ব্যবস্থার জন্য Firebase Authentication
+এবং সার্ভার-ভেরিফাইড Custom Claims প্রয়োজন।
+শুধু HTML-এর পাসওয়ার্ড দিয়ে Admin নিরাপত্তা নিশ্চিত হয় না।
+</p>
+</div>
+
+<!-- PRIVACY -->
+<div class="card">
+<h3>🔐 Privacy & Permission</h3>
+<p class="small">
+GPS চালু করলে আপনার সম্মতিতে বর্তমান অবস্থান সংগ্রহ হবে।
+Firebase-এ পাঠাতে Login এবং Database permission লাগবে।
+Tracking বন্ধ করলে নতুন অবস্থান সংগ্রহ বন্ধ হবে।
+</p>
+</div>
+
+</div>
+
+<footer>
+BD GPS Tracker Global © 2026
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+
+<script>
+
+// ===============================
+// GLOBAL VARIABLES
+// ===============================
+
+let watchID = null;
+let latitude = null;
+let longitude = null;
+let accuracy = null;
+let map = null;
+let marker = null;
+let firebaseApp = null;
+let auth = null;
+let database = null;
+let currentUser = null;
+let firebaseReady = false;
+
+// ===============================
+// LANGUAGE
+// ===============================
+
+const translations = {
+ bn:{
+  subtitle:"বাংলাদেশ ও বিশ্বব্যাপী GPS ট্র্যাকার",
+  gps:"📍 GPS লোকেশন",
+  start:"GPS চালু করুন",
+  stop:"GPS বন্ধ করুন",
+  waiting:"লোকেশন সংগ্রহ করা হচ্ছে...",
+  success:"লোকেশন পাওয়া গেছে",
+  denied:"লোকেশন অনুমতি দেওয়া হয়নি",
+  error:"লোকেশন পাওয়া যায়নি",
+  off:"GPS বন্ধ আছে"
+ },
+ en:{
+  subtitle:"Bangladesh & Global GPS Tracker",
+  gps:"📍 GPS Location",
+  start:"Start GPS",
+  stop:"Stop GPS",
+  waiting:"Getting location...",
+  success:"Location received",
+  denied:"Location permission denied",
+  error:"Unable to get location",
+  off:"GPS is stopped"
+ }
+};
+
+function changeLanguage(){
+ const lang=document.getElementById("language").value;
+ const t=translations[lang];
+
+ document.getElementById("subtitle").innerText=t.subtitle;
+ document.getElementById("gpsHeading").innerText=t.gps;
+ document.getElementById("startBtn").innerText=t.start;
+ document.getElementById("stopBtn").innerText=t.stop;
+ document.documentElement.lang=lang;
+}
+
+// ===============================
+// MAP INITIALIZATION
+// ===============================
+
+function initializeMap(){
+
+ if(map) return;
+
+ map=L.map("map").setView([23.8103,90.4125],5);
+
+ L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  {
+   maxZoom:19,
+   attribution:"© OpenStreetMap"
+  }
+ ).addTo(map);
+}
+
+initializeMap();
+
+// ===============================
+// GPS TRACKING
+// ===============================
+
+function startTracking(){
+
+ if(!navigator.geolocation){
+  alert("এই ব্রাউজারে GPS Support নেই");
+  return;
+ }
+
+ if(watchID!==null) return;
+
+ const lang=document.getElementById("language").value;
+
+ document.getElementById("gpsStatus").innerText=
+ translations[lang].waiting;
+
+ document.getElementById("startBtn").disabled=true;
+ document.getElementById("stopBtn").disabled=false;
+
+ watchID=navigator.geolocation.watchPosition(
+
+  function(position){
+
+   latitude=position.coords.latitude;
+   longitude=position.coords.longitude;
+   accuracy=position.coords.accuracy;
+
+   document.getElementById("latitude").innerText=
+   latitude.toFixed(7);
+
+   document.getElementById("longitude").innerText=
+   longitude.toFixed(7);
+
+   document.getElementById("accuracy").innerText=
+   accuracy.toFixed(2)+" meters";
+
+   document.getElementById("updated").innerText=
+   new Date().toLocaleString();
+
+   document.getElementById("gpsStatus").innerText=
+   translations[lang].success;
+
+   updateMap();
+   saveLocation();
+
+  },
+
+  function(error){
+
+   let message="";
+
+   if(error.code===1) message=translations[lang].denied;
+   else message=translations[lang].error;
+
+   document.getElementById("gpsStatus").innerText=
+   message+" ("+error.message+")";
+
+   stopTracking();
+
+  },
+
+  {
+   enableHighAccuracy:true,
+   maximumAge:3000,
+   timeout:20000
+  }
+ );
+}
+
+function stopTracking(){
+
+ if(watchID!==null){
+  navigator.geolocation.clearWatch(watchID);
+  watchID=null;
+ }
+
+ document.getElementById("startBtn").disabled=false;
+ document.getElementById("stopBtn").disabled=true;
+
+ document.getElementById("gpsStatus").innerText=
+ translations[document.getElementById("language").value].off;
+}
+
+// ===============================
+// MAP UPDATE
+// ===============================
+
+function updateMap(){
+
+ if(latitude===null || longitude===null) return;
+
+ const point=[latitude,longitude];
+
+ if(marker){
+  marker.setLatLng(point);
+ }else{
+  marker=L.marker(point).addTo(map);
+ }
+
+ marker.bindPopup(
+  "Your Location<br>"+
+  latitude.toFixed(6)+", "+
+  longitude.toFixed(6)
+ );
+
+ map.setView(point,16);
+}
+
+// ===============================
+// GOOGLE MAPS
+// ===============================
+
+function openGoogleMaps(){
+
+ if(latitude===null){
+  alert("আগে GPS চালু করুন");
+  return;
+ }
+
+ window.open(
+  "https://www.google.com/maps?q="+latitude+","+longitude,
+  "_blank"
+ );
+}
+
+// ===============================
+// COPY LOCATION
+// ===============================
+
+function copyLocation(){
+
+ if(latitude===null){
+  alert("আগে GPS চালু করুন");
+  return;
+ }
+
+ const text=
+ "BD GPS Tracker\n"+
+ "Latitude: "+latitude+
+ "\nLongitude: "+longitude+
+ "\nAccuracy: "+accuracy+" meters";
+
+ if(navigator.clipboard){
+  navigator.clipboard.writeText(text)
+  .then(()=>alert("লোকেশন কপি হয়েছে"))
+  .catch(()=>prompt("কপি করুন",text));
+ }else{
+  prompt("কপি করুন",text);
+ }
+}
+
+// ===============================
+// FIREBASE CONNECTION
+// ===============================
+
+function connectFirebase(){
+
+ try{
+
+  const config={
+   apiKey:document.getElementById("apiKey").value.trim(),
+   authDomain:document.getElementById("authDomain").value.trim(),
+   databaseURL:document.getElementById("databaseURL").value.trim(),
+   projectId:document.getElementById("projectId").value.trim(),
+   appId:document.getElementById("appId").value.trim()
+  };
+
+  if(Object.values(config).some(v=>!v)){
+   alert("সব Firebase তথ্য পূরণ করুন");
+   return;
+  }
+
+  if(firebase.apps.length){
+   firebaseApp=firebase.app();
+  }else{
+   firebaseApp=firebase.initializeApp(config);
+  }
+
+  auth=firebase.auth();
+  database=firebase.database();
+
+  firebaseReady=true;
+
+  document.getElementById("firebaseStatus").innerText=
+  "Firebase initialized. Login করুন।";
+
+  auth.onAuthStateChanged(user=>{
+   currentUser=user;
+   updateUserStatus();
+  });
+
+ }catch(error){
+
+  document.getElementById("firebaseStatus").innerText=
+  "Firebase Error: "+error.message;
+
+ }
+}
+
+// ===============================
+// USER REGISTER
+// ===============================
+
+function registerUser(){
+
+ if(!firebaseReady){
+  alert("আগে Firebase Connect করুন");
+  return;
+ }
+
+ const name=document.getElementById("userName").value.trim();
+ const email=document.getElementById("userEmail").value.trim();
+ const password=document.getElementById("userPassword").value;
+
+ if(!name || !email || password.length<6){
+  alert("নাম, সঠিক Email ও কমপক্ষে ৬ অক্ষরের Password দিন");
+  return;
+ }
+
+ auth.createUserWithEmailAndPassword(email,password)
+
+ .then(result=>{
+
+  return result.user.updateProfile({
+   displayName:name
+  }).then(()=>{
+
+   return database.ref("users/"+result.user.uid+"/profile")
+   .set({
+    name:name,
+    email:email,
+    createdAt:firebase.database.ServerValue.TIMESTAMP
+   });
+
+  });
+
+ })
+
+ .then(()=>{
+  alert("Account তৈরি হয়েছে");
+  updateUserStatus();
+ })
+
+ .catch(error=>{
+  alert(error.message);
+ });
+}
+
+// ===============================
+// USER LOGIN
+// ===============================
+
+function loginUser(){
+
+ if(!firebaseReady){
+  alert("আগে Firebase Connect করুন");
+  return;
+ }
+
+ const email=document.getElementById("userEmail").value.trim();
+ const password=document.getElementById("userPassword").value;
+
+ auth.signInWithEmailAndPassword(email,password)
+
+ .then(()=>{
+  alert("Login সফল হয়েছে");
+  updateUserStatus();
+ })
+
+ .catch(error=>{
+  alert(error.message);
+ });
+}
+
+// ===============================
+// USER LOGOUT
+// ===============================
+
+function logoutUser(){
+
+ if(!auth) return;
+
+ stopTracking();
+
+ auth.signOut().then(()=>{
+  currentUser=null;
+  updateUserStatus();
+ });
+}
+
+function firebaseLogout(){
+ logoutUser();
+}
+
+// ===============================
+// USER STATUS
+// ===============================
+
+function updateUserStatus(){
+
+ const user=auth ? auth.currentUser : null;
+
+ currentUser=user;
+
+ document.getElementById("userStatus").innerText=
+ user ?
+ "Logged in: "+user.email+" | UID: "+user.uid :
+ "Login করা হয়নি";
+
+ document.getElementById("adminStatus").innerText=
+ "Admin permission server-side verification প্রয়োজন";
+}
+
+// ===============================
+// SAVE LOCATION TO FIREBASE
+// ===============================
+
+function saveLocation(){
+
+ if(!firebaseReady || !auth || !auth.currentUser) return;
+
+ if(latitude===null || longitude===null) return;
+
+ const uid=auth.currentUser.uid;
+
+ const locationData={
+  latitude:latitude,
+  longitude:longitude,
+  accuracy:accuracy,
+  timestamp:firebase.database.ServerValue.TIMESTAMP
+ };
+
+ database.ref("users/"+uid+"/location")
+ .set(locationData)
+
+ .then(()=>{
+  document.getElementById("firebaseStatus").innerText=
+  "Location saved successfully";
+ })
+
+ .catch(error=>{
+  document.getElementById("firebaseStatus").innerText=
+  "Database Error: "+error.message;
+ });
+}
+
+// ===============================
+// RESTORE FIREBASE CONFIG
+// ===============================
+
+window.addEventListener("beforeunload",()=>{
+ stopTracking();
+});
+
+</script>
+
+</body>
+</html>
