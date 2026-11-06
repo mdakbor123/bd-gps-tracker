@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -7,140 +6,285 @@
 <title>BD GPS Tracker</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#eef4ff;color:#17345e;font-family:Arial,sans-serif}
-.container{max-width:430px;margin:35px auto;padding:18px}
-.card{background:white;padding:25px 20px;border-radius:18px;box-shadow:0 5px 25px #0001;text-align:center}
-.logo{font-size:45px}
-h2{color:#1264d8}
-p{color:#65758b}
-input,button{width:100%;padding:14px;margin:8px 0;border-radius:9px;font-size:16px}
+body{margin:0;background:#eef4ff;color:#17345e;font-family:Arial}
+.container{max-width:600px;margin:auto;padding:15px}
+.card{background:white;padding:20px;border-radius:16px;
+margin:12px 0;box-shadow:0 4px 18px #0001}
+h2{color:#1264d8;text-align:center}
+input,button{width:100%;padding:13px;margin:7px 0;
+border-radius:9px;font-size:16px}
 input{border:1px solid #ccd8e8}
-button{border:0;background:#1264d8;color:white;font-weight:bold}
-.google{background:white;color:#333;border:1px solid #ccd8e8}
-#status{font-size:14px;overflow-wrap:anywhere;margin-top:15px}
+button{background:#1264d8;color:white;border:0;font-weight:bold}
+#admin,#tracking{display:none}
+#map{height:350px;width:100%;border-radius:12px}
+.user{padding:12px;border:1px solid #ddd;margin:8px 0;border-radius:9px}
+.green{background:#168b50}
+.red{background:#bb3333}
 </style>
 </head>
 <body>
 <div class="container">
+
 <div class="card">
-<div class="logo">📍</div>
-<h2>BD GPS Tracker</h2>
-<p>নিরাপদ লোকেশন ট্র্যাকিং সিস্টেম</p>
+<h2>📍 BD GPS Tracker</h2>
+<p style="text-align:center">নিরাপদ লোকেশন ট্র্যাকিং সিস্টেম</p>
 
 <input id="email" type="email" placeholder="Email address">
 <input id="password" type="password" placeholder="Password">
 
 <button onclick="login()">Login</button>
 <button onclick="register()">Create Account</button>
-<button class="google" onclick="googleLogin()">Continue with Google</button>
+<button onclick="googleLogin()">Continue with Google</button>
 <button onclick="logout()">Logout</button>
-
-<div id="status">Firebase সংযোগের অপেক্ষায়...</div>
+<div id="status">Login করুন</div>
 </div>
+
+<div class="card" id="tracking">
+<h2>আমার Location</h2>
+<button onclick="shareLocation()">লোকেশন শেয়ার শুরু করুন</button>
+<button onclick="stopLocation()" class="red">লোকেশন শেয়ার বন্ধ করুন</button>
+<p id="locationStatus">লোকেশন শেয়ার বন্ধ</p>
+</div>
+
+<div class="card" id="admin">
+<h2>Admin Dashboard</h2>
+<p id="counts"></p>
+<button onclick="loadUsers()">Refresh User List</button>
+<div id="users"></div>
+<h2>Live User Map</h2>
+<div id="map"></div>
+</div>
+
 </div>
 
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {initializeApp} from
+"https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+
 import {
-getAuth, signInWithEmailAndPassword,
+getAuth,signInWithEmailAndPassword,
 createUserWithEmailAndPassword,
-GoogleAuthProvider, signInWithRedirect,
-getRedirectResult, onAuthStateChanged, signOut
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+GoogleAuthProvider,signInWithPopup,
+onAuthStateChanged,signOut
+} from
+"https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
 import {
-getDatabase,ref,set,get
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+getDatabase,ref,set,get,update,onValue
+} from
+"https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
-const firebaseConfig = {
-apiKey: "AIzaSyD7eyFrt6xkzzWvrBGRsV5e0fXxKB3O97Q",
-authDomain: "bd-gps-tracker.firebaseapp.com",
-databaseURL: "https://bd-gps-tracker-default-rtdb.firebaseio.com",
-projectId: "bd-gps-tracker",
-storageBucket: "bd-gps-tracker.firebasestorage.app",
-messagingSenderId: "1055086540766",
-appId: "1:1055086540766:web:7c6b8ca93b06098cb14f4f",
-measurementId: "G-ZMSSHYR6SY"
+const firebaseConfig={
+apiKey:"AIzaSyD7eyFrt6xkzzWvrBGRsV5e0fXxKB3O97Q",
+authDomain:"bd-gps-tracker.firebaseapp.com",
+databaseURL:"https://bd-gps-tracker-default-rtdb.firebaseio.com",
+projectId:"bd-gps-tracker",
+storageBucket:"bd-gps-tracker.firebasestorage.app",
+messagingSenderId:"1055086540766",
+appId:"1:1055086540766:web:7c6b8ca93b06098cb14f4f",
+measurementId:"G-ZMSSHYR6SY"
 };
 
-const ADMIN_UID = "QthMB5DjNWge5JMk7BqtTy1KZEN2";
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
-const provider = new GoogleAuthProvider();
-const status = document.getElementById("status");
+const ADMIN_UID="QthMB5DjNWge5JMk7BqtTy1KZEN2";
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getDatabase(app);
+const provider=new GoogleAuthProvider();
 
-window.login = async function(){
+let watchId=null;
+let map=null;
+let markers={};
+
+const $=id=>document.getElementById(id);
+const status=$("status");
+
+window.login=async()=>{
 try{
-const email=document.getElementById("email").value.trim();
-const password=document.getElementById("password").value;
-await signInWithEmailAndPassword(auth,email,password);
-}catch(e){status.innerText="Login Error: "+e.message;}
+await signInWithEmailAndPassword(auth,
+$("email").value.trim(),$("password").value);
+}catch(e){status.textContent=e.message;}
 };
 
-window.register = async function(){
+window.register=async()=>{
 try{
-const email=document.getElementById("email").value.trim();
-const password=document.getElementById("password").value;
-if(!email || password.length<6){
-status.innerText="সঠিক Email ও কমপক্ষে ৬ অক্ষরের Password দিন।";
+const email=$("email").value.trim();
+const password=$("password").value;
+if(!email||password.length<6){
+status.textContent="সঠিক Email এবং ৬ অক্ষরের Password দিন";
 return;
 }
-const credential=await createUserWithEmailAndPassword(auth,email,password);
-await set(ref(db,"users/"+credential.user.uid),{
-email:credential.user.email || email,
-role:"user",
-approved:false
+const c=await createUserWithEmailAndPassword(auth,email,password);
+await set(ref(db,"users/"+c.user.uid),{
+email,role:"user",approved:false
 });
-status.innerText="Account তৈরি হয়েছে। Admin অনুমোদনের অপেক্ষায়।";
-}catch(e){status.innerText="Register Error: "+e.message;}
+status.textContent="Registration সফল। Admin অনুমোদনের অপেক্ষায়।";
+}catch(e){status.textContent=e.message;}
 };
 
-window.googleLogin = async function(){
+window.googleLogin=async()=>{
 try{
-await signInWithRedirect(auth,provider);
-}catch(e){status.innerText="Google Error: "+e.message;}
+await signInWithPopup(auth,provider);
+}catch(e){status.textContent=e.message;}
 };
 
-window.logout = async function(){
-try{
+window.logout=async()=>{
+stopLocation();
 await signOut(auth);
-status.innerText="আপনি Logout করেছেন";
-}catch(e){status.innerText=e.message;}
+$("admin").style.display="none";
+$("tracking").style.display="none";
 };
-
-getRedirectResult(auth).catch(e=>{
-status.innerText="Google Login Error: "+e.message;
-});
 
 onAuthStateChanged(auth,async user=>{
-if(!user){
-status.innerText="Login করুন";
-return;
-}
+$("admin").style.display="none";
+$("tracking").style.display="none";
+if(!user){status.textContent="Login করুন";return;}
 try{
+const p=await get(ref(db,"users/"+user.uid));
+let data=p.val();
+
 if(user.uid===ADMIN_UID){
-const profile=await get(ref(db,"users/"+user.uid));
-if(!profile.exists()){
+if(!p.exists()){
 await set(ref(db,"users/"+user.uid),{
-email:user.email||"",role:"admin",approved:true
+email:user.email,role:"admin",approved:true
 });
 }
-status.innerText="Admin Login সফল! Admin Profile প্রস্তুত।";
-}else{
-const profile=await get(ref(db,"users/"+user.uid));
-if(!profile.exists()){
-status.innerText="প্রোফাইল পাওয়া যায়নি। আবার Account তৈরি করুন।";
+status.textContent="Admin Login সফল!";
+$("admin").style.display="block";
+loadUsers();
 return;
 }
-const data=profile.val();
-if(data.approved===true){
-status.innerText="আপনার Account অনুমোদিত হয়েছে।";
-}else{
-status.innerText="Login হয়েছে। Admin অনুমোদনের অপেক্ষায়।";
-}
-}
-}catch(e){status.innerText="Database Error: "+e.message;}
+
+if(!data){
+await set(ref(db,"users/"+user.uid),{
+email:user.email,role:"user",approved:false
 });
+data={approved:false};
+}
+if(data.approved===true){
+status.textContent="আপনার Account অনুমোদিত হয়েছে";
+$("tracking").style.display="block";
+}else{
+status.textContent="Admin অনুমোদনের অপেক্ষায়";
+}
+}catch(e){status.textContent=e.message;}
+});
+
+window.loadUsers=async()=>{
+if(auth.currentUser?.uid!==ADMIN_UID)return;
+try{
+const snap=await get(ref(db,"users"));
+const list=$("users");
+list.replaceChildren();
+let pending=0,approved=0;
+if(!snap.exists())return;
+const data=snap.val();
+
+for(const [uid,u] of Object.entries(data)){
+if(uid===ADMIN_UID)continue;
+if(u.approved===true)approved++;else pending++;
+
+const box=document.createElement("div");
+box.className="user";
+const name=document.createElement("p");
+name.textContent=(u.email||uid)+" — "+
+(u.approved?"Approved":"Pending");
+box.append(name);
+
+if(u.approved!==true){
+const b=document.createElement("button");
+b.textContent="Approve User";
+b.className="green";
+b.onclick=async()=>{
+if(auth.currentUser?.uid!==ADMIN_UID)return;
+await update(ref(db,"users/"+uid),{approved:true});
+loadUsers();
+};
+box.append(b);
+}
+list.append(box);
+}
+$("counts").textContent="Pending: "+pending+" | Approved: "+approved;
+}catch(e){$("users").textContent=e.message;}
+};
+
+window.shareLocation=()=>{
+if(!auth.currentUser){
+$("locationStatus").textContent="আগে Login করুন";return;
+}
+if(!navigator.geolocation){
+$("locationStatus").textContent="GPS সাপোর্ট নেই";return;
+}
+$("locationStatus").textContent="আপনার অনুমতি অপেক্ষা করছে...";
+watchId=navigator.geolocation.watchPosition(async pos=>{
+try{
+const user=auth.currentUser;
+if(!user)return;
+const p=await get(ref(db,"users/"+user.uid));
+if(!p.exists()||p.val().approved!==true)return;
+await set(ref(db,"locations/"+user.uid),{
+lat:pos.coords.latitude,
+lng:pos.coords.longitude,
+updatedAt:Date.now()
+});
+$("locationStatus").textContent="লোকেশন শেয়ার হচ্ছে";
+}catch(e){$("locationStatus").textContent=e.message;}
+},e=>{
+$("locationStatus").textContent="GPS Error: "+e.message;
+},{enableHighAccuracy:true,maximumAge:5000,timeout:20000});
+};
+
+window.stopLocation=()=>{
+if(watchId!==null){
+navigator.geolocation.clearWatch(watchId);
+watchId=null;
+}
+$("locationStatus").textContent="লোকেশন শেয়ার বন্ধ";
+};
+
+window.initMap=()=>{
+map=new google.maps.Map($("map"),{
+center:{lat:23.8103,lng:90.4125},
+zoom:6
+});
+};
+
+function watchLocations(){
+onValue(ref(db,"locations"),snap=>{
+if(!map)return;
+const data=snap.val()||{};
+for(const [uid,loc] of Object.entries(data)){
+if(typeof loc.lat!=="number"||typeof loc.lng!=="number")continue;
+const point={lat:loc.lat,lng:loc.lng};
+if(markers[uid]){
+markers[uid].setPosition(point);
+}else{
+markers[uid]=new google.maps.Marker({
+position:point,map,title:uid
+});
+}
+}
+for(const uid of Object.keys(markers)){
+if(!data[uid]){
+markers[uid].setMap(null);
+delete markers[uid];
+}
+}
+});
+}
+
+const mapScript=document.createElement("script");
+mapScript.src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap";
+mapScript.async=true;
+mapScript.defer=true;
+document.head.appendChild(mapScript);
+
+window.initMap=()=>{
+map=new google.maps.Map($("map"),{
+center:{lat:23.8103,lng:90.4125},zoom:6
+});
+watchLocations();
+};
 </script>
 </body>
 </html>
+
