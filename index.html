@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -6,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BD GPS Tracker</title>
 
-<!-- Leaflet Free Map -->
 <link rel="stylesheet"
 href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
@@ -21,14 +19,14 @@ body{
 }
 
 .container{
-  max-width:600px;
+  max-width:750px;
   margin:auto;
-  padding:15px;
+  padding:12px;
 }
 
 .card{
   background:white;
-  padding:20px;
+  padding:18px;
   border-radius:16px;
   margin:12px 0;
   box-shadow:0 4px 18px #0001;
@@ -59,35 +57,65 @@ button{
 
 button:disabled{opacity:.6}
 
+.red{background:#bb3333}
+.green{background:#168b50}
+.gray{background:#64748b}
+
 #admin,#tracking{display:none}
 
 #map{
-  height:350px;
+  height:400px;
   width:100%;
   border-radius:12px;
   z-index:1;
 }
 
 .user{
-  padding:12px;
-  border:1px solid #ddd;
-  margin:8px 0;
-  border-radius:9px;
+  padding:13px;
+  border:1px solid #dce5f1;
+  margin:9px 0;
+  border-radius:10px;
+  overflow-wrap:anywhere;
 }
 
-.green{background:#168b50}
-.red{background:#bb3333}
+.user p{margin:5px 0}
 
 #status,#locationStatus{
   overflow-wrap:anywhere;
   text-align:center;
 }
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.stat{
+  background:#eef4ff;
+  padding:14px;
+  border-radius:10px;
+  text-align:center;
+}
+
+.stat strong{
+  display:block;
+  font-size:22px;
+  color:#1264d8;
+}
+
+.small{
+  font-size:12px;
+  color:#64748b;
+}
+
 </style>
 </head>
 
 <body>
 <div class="container">
 
+<!-- LOGIN -->
 <div class="card">
   <h2>📍 BD GPS Tracker</h2>
   <p style="text-align:center">
@@ -101,18 +129,33 @@ button:disabled{opacity:.6}
   placeholder="Password">
 
   <button onclick="login()">Login</button>
-  <button onclick="register()">Create Account</button>
-  <button onclick="googleLogin()">Continue with Google</button>
-  <button onclick="logout()" class="red">Logout</button>
+
+  <button onclick="register()" class="green">
+    Create Account
+  </button>
+
+  <button onclick="googleLogin()" class="gray">
+    Continue with Google
+  </button>
+
+  <button onclick="logout()" class="red">
+    Logout
+  </button>
 
   <p id="status">Login করুন</p>
 </div>
 
-<!-- User Tracking -->
-<div class="card" id="tracking">
-  <h2>আমার Location</h2>
 
-  <button onclick="shareLocation()">
+<!-- USER TRACKING -->
+<div class="card" id="tracking">
+
+  <h2>📍 আমার Location</h2>
+
+  <p style="text-align:center">
+    আপনার অনুমতিতে নিজের লোকেশন শেয়ার করুন।
+  </p>
+
+  <button onclick="shareLocation()" class="green">
     লোকেশন শেয়ার শুরু করুন
   </button>
 
@@ -120,28 +163,70 @@ button:disabled{opacity:.6}
     লোকেশন শেয়ার বন্ধ করুন
   </button>
 
-  <p id="locationStatus">লোকেশন শেয়ার বন্ধ</p>
+  <p id="locationStatus">
+    লোকেশন শেয়ার বন্ধ
+  </p>
+
 </div>
 
-<!-- Admin Dashboard -->
+
+<!-- ADMIN DASHBOARD -->
 <div class="card" id="admin">
-  <h2>Admin Dashboard</h2>
 
-  <p id="counts"></p>
+  <h2>🛡️ Admin Dashboard</h2>
 
-  <button onclick="loadUsers()">Refresh User List</button>
+  <div class="stats">
+    <div class="stat">
+      <strong id="totalUsers">0</strong>
+      মোট User
+    </div>
+
+    <div class="stat">
+      <strong id="approvedUsers">0</strong>
+      Approved
+    </div>
+
+    <div class="stat">
+      <strong id="pendingUsers">0</strong>
+      Pending
+    </div>
+
+    <div class="stat">
+      <strong id="activeUsers">0</strong>
+      সাম্প্রতিক লোকেশন
+    </div>
+  </div>
+
+  <h2>👥 User Management</h2>
+
+  <button onclick="loadUsers()">
+    Refresh User List
+  </button>
 
   <div id="users"></div>
 
-  <h2>Live User Map</h2>
+  <h2>🌍 Live User Map</h2>
+
+  <p class="small" style="text-align:center">
+    সর্বশেষ দুই মিনিটের লোকেশনকে সাম্প্রতিক হিসেবে দেখানো হবে।
+  </p>
+
+  <button onclick="refreshMap()" class="green">
+    Refresh Map
+  </button>
 
   <div id="map"></div>
-</div>
+
+  <p id="mapStatus"></p>
 
 </div>
 
-<!-- Leaflet Library -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</div>
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
 
 <script type="module">
 
@@ -165,12 +250,13 @@ import {
   set,
   get,
   update,
+  remove,
   onValue
 } from
 "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 
-// Firebase Configuration
+// FIREBASE CONFIGURATION
 const firebaseConfig = {
   apiKey: "AIzaSyD7eyFrt6xkzzWvrBGRsV5e0fXxKB3O97Q",
   authDomain: "bd-gps-tracker.firebaseapp.com",
@@ -183,7 +269,7 @@ const firebaseConfig = {
 };
 
 
-// আপনার Admin UID
+// ADMIN UID
 const ADMIN_UID = "QthMB5DjNWge5JMk7BqtTy1KZEN2";
 
 const app = initializeApp(firebaseConfig);
@@ -197,6 +283,8 @@ let watchId = null;
 let map = null;
 let markers = {};
 let locationListener = null;
+let userListener = null;
+let lastMapData = null;
 
 
 // LOGIN
@@ -208,7 +296,7 @@ window.login = async () => {
       $("password").value
     );
   } catch(e) {
-    $("status").textContent = e.message;
+    $("status").textContent = "Login Error: " + e.message;
   }
 };
 
@@ -239,7 +327,7 @@ window.register = async () => {
       "Registration সফল। Admin অনুমোদনের অপেক্ষায়।";
 
   } catch(e) {
-    $("status").textContent = e.message;
+    $("status").textContent = "Register Error: " + e.message;
   }
 };
 
@@ -249,18 +337,50 @@ window.googleLogin = async () => {
   try {
     await signInWithPopup(auth,provider);
   } catch(e) {
-    $("status").textContent = e.message;
+    $("status").textContent = "Google Login Error: " + e.message;
+  }
+};
+
+
+// STOP LOCATION
+window.stopLocation = async () => {
+
+  if(watchId !== null){
+    navigator.geolocation.clearWatch(watchId);
+    watchId = null;
+  }
+
+  const user = auth.currentUser;
+
+  if(user){
+    try{
+      await remove(ref(db,"locations/"+user.uid));
+      $("locationStatus").textContent =
+        "লোকেশন শেয়ার বন্ধ হয়েছে।";
+    }catch(e){
+      $("locationStatus").textContent =
+        "Location Error: " + e.message;
+    }
+  }else{
+    $("locationStatus").textContent =
+      "লোকেশন শেয়ার বন্ধ";
   }
 };
 
 
 // LOGOUT
 window.logout = async () => {
-  stopLocation();
+
+  await stopLocation();
 
   if(locationListener){
     locationListener();
     locationListener = null;
+  }
+
+  if(userListener){
+    userListener();
+    userListener = null;
   }
 
   await signOut(auth);
@@ -281,7 +401,7 @@ onAuthStateChanged(auth,async user => {
     return;
   }
 
-  try {
+  try{
 
     const userRef = ref(db,"users/"+user.uid);
     const p = await get(userRef);
@@ -293,7 +413,7 @@ onAuthStateChanged(auth,async user => {
 
       if(!p.exists()){
         await set(userRef,{
-          email:user.email,
+          email:user.email || "",
           role:"admin",
           approved:true
         });
@@ -308,10 +428,11 @@ onAuthStateChanged(auth,async user => {
       return;
     }
 
-    // CREATE PROFILE IF MISSING
+    // CREATE PROFILE
     if(!data){
+
       await set(userRef,{
-        email:user.email,
+        email:user.email || "",
         role:"user",
         approved:false
       });
@@ -334,8 +455,8 @@ onAuthStateChanged(auth,async user => {
 
     }
 
-  } catch(e) {
-    $("status").textContent = e.message;
+  }catch(e){
+    $("status").textContent = "Account Error: " + e.message;
   }
 });
 
@@ -345,7 +466,7 @@ window.loadUsers = async () => {
 
   if(auth.currentUser?.uid !== ADMIN_UID) return;
 
-  try {
+  try{
 
     const snap = await get(ref(db,"users"));
     const list = $("users");
@@ -354,17 +475,15 @@ window.loadUsers = async () => {
 
     let pending = 0;
     let approved = 0;
+    let total = 0;
 
-    if(!snap.exists()){
-      $("counts").textContent = "কোনো User নেই";
-      return;
-    }
-
-    const data = snap.val();
+    const data = snap.val() || {};
 
     for(const [uid,u] of Object.entries(data)){
 
       if(uid === ADMIN_UID) continue;
+
+      total++;
 
       if(u.approved === true){
         approved++;
@@ -376,17 +495,21 @@ window.loadUsers = async () => {
       box.className = "user";
 
       const name = document.createElement("p");
+      name.textContent = "Email: " + (u.email || "Unknown");
 
-      name.textContent =
-        (u.email || uid) + " — " +
-        (u.approved ? "Approved" : "Pending");
+      const id = document.createElement("p");
+      id.className = "small";
+      id.textContent = "UID: " + uid;
 
-      box.append(name);
+      const status = document.createElement("p");
+      status.textContent =
+        "Status: " + (u.approved ? "Approved" : "Pending");
+
+      box.append(name,id,status);
 
       if(u.approved !== true){
 
         const b = document.createElement("button");
-
         b.textContent = "Approve User";
         b.className = "green";
 
@@ -412,28 +535,32 @@ window.loadUsers = async () => {
       list.append(box);
     }
 
-    $("counts").textContent =
-      "Pending: " + pending +
-      " | Approved: " + approved;
+    $("totalUsers").textContent = total;
+    $("approvedUsers").textContent = approved;
+    $("pendingUsers").textContent = pending;
 
-  } catch(e) {
+    if(total === 0){
+      list.textContent = "কোনো User নেই";
+    }
+
+  }catch(e){
     $("users").textContent = e.message;
   }
 };
 
 
 // SHARE LOCATION
-window.shareLocation = () => {
+window.shareLocation = async () => {
 
-  if(!auth.currentUser){
-    $("locationStatus").textContent =
-      "আগে Login করুন";
+  const user = auth.currentUser;
+
+  if(!user){
+    $("locationStatus").textContent = "আগে Login করুন";
     return;
   }
 
   if(!navigator.geolocation){
-    $("locationStatus").textContent =
-      "GPS সাপোর্ট নেই";
+    $("locationStatus").textContent = "GPS সাপোর্ট নেই";
     return;
   }
 
@@ -443,46 +570,72 @@ window.shareLocation = () => {
     return;
   }
 
+  try{
+
+    const p = await get(ref(db,"users/"+user.uid));
+
+    if(!p.exists() || p.val().approved !== true){
+      $("locationStatus").textContent =
+        "আপনার Account অনুমোদিত নয়";
+      return;
+    }
+
+  }catch(e){
+    $("locationStatus").textContent = e.message;
+    return;
+  }
+
   $("locationStatus").textContent =
-    "আপনার GPS অনুমতির অপেক্ষায়...";
+    "GPS অনুমতির অপেক্ষায়...";
 
   watchId = navigator.geolocation.watchPosition(
+
     async pos => {
 
-      try {
+      try{
 
-        const user = auth.currentUser;
-        if(!user) return;
+        const currentUser = auth.currentUser;
+        if(!currentUser) return;
 
-        const p = await get(ref(db,"users/"+user.uid));
+        const p = await get(
+          ref(db,"users/"+currentUser.uid)
+        );
 
         if(!p.exists() || p.val().approved !== true){
           $("locationStatus").textContent =
-            "আপনার Account অনুমোদিত নয়";
-          stopLocation();
+            "Account অনুমোদিত নয়";
+          await stopLocation();
           return;
         }
 
-        await set(ref(db,"locations/"+user.uid),{
-          lat:pos.coords.latitude,
-          lng:pos.coords.longitude,
-          updatedAt:Date.now()
-        });
+        await set(
+          ref(db,"locations/"+currentUser.uid),
+          {
+            lat:pos.coords.latitude,
+            lng:pos.coords.longitude,
+            updatedAt:Date.now()
+          }
+        );
 
         $("locationStatus").textContent =
-          "আপনার লোকেশন শেয়ার হচ্ছে";
+          "আপনার লোকেশন শেয়ার হচ্ছে ✓";
 
-      } catch(e) {
-        $("locationStatus").textContent = e.message;
+      }catch(e){
+        $("locationStatus").textContent =
+          "GPS Error: " + e.message;
       }
-
     },
 
     e => {
+
       $("locationStatus").textContent =
         "GPS Error: " + e.message;
 
-      stopLocation();
+      if(watchId !== null){
+        navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+      }
+
     },
 
     {
@@ -494,25 +647,11 @@ window.shareLocation = () => {
 };
 
 
-// STOP LOCATION
-window.stopLocation = () => {
-
-  if(watchId !== null){
-    navigator.geolocation.clearWatch(watchId);
-    watchId = null;
-  }
-
-  $("locationStatus").textContent =
-    "লোকেশন শেয়ার বন্ধ";
-};
-
-
-// OPENSTREETMAP + LEAFLET
+// INITIALIZE MAP
 function initMap(){
 
   if(!window.L){
-    $("status").textContent =
-      "Map Library লোড হয়নি। Internet পরীক্ষা করুন।";
+    $("mapStatus").textContent = "Map Library লোড হয়নি";
     return;
   }
 
@@ -521,9 +660,7 @@ function initMap(){
     return;
   }
 
-  map = L.map("map").setView(
-    [23.8103,90.4125],6
-  );
+  map = L.map("map").setView([23.8103,90.4125],6);
 
   L.tileLayer(
     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -537,7 +674,7 @@ function initMap(){
 }
 
 
-// LIVE USER LOCATIONS
+// LIVE LOCATIONS
 function watchLocations(){
 
   if(locationListener){
@@ -552,6 +689,10 @@ function watchLocations(){
       if(!map) return;
 
       const data = snap.val() || {};
+      lastMapData = data;
+
+      const now = Date.now();
+      const points = [];
 
       for(const [uid,loc] of Object.entries(data)){
 
@@ -561,21 +702,35 @@ function watchLocations(){
         ) continue;
 
         const point = [loc.lat,loc.lng];
+        points.push(point);
+
+        const recent =
+          now - (loc.updatedAt || 0) < 120000;
+
+        const popup =
+          "<b>User:</b> " + uid +
+          "<br><b>Status:</b> " +
+          (recent ? "সাম্প্রতিক" : "পুরোনো লোকেশন") +
+          "<br><b>Updated:</b> " +
+          (loc.updatedAt
+            ? new Date(loc.updatedAt).toLocaleString()
+            : "Unknown");
 
         if(markers[uid]){
 
           markers[uid].setLatLng(point);
+          markers[uid].setPopupContent(popup);
 
         }else{
 
           markers[uid] = L.marker(point)
             .addTo(map)
-            .bindPopup("User: " + uid);
+            .bindPopup(popup);
 
         }
       }
 
-      // REMOVE OLD MARKERS
+      // REMOVE DELETED MARKERS
       for(const uid of Object.keys(markers)){
 
         if(!data[uid]){
@@ -586,15 +741,57 @@ function watchLocations(){
         }
       }
 
+      $("activeUsers").textContent =
+        Object.values(data).filter(
+          loc => loc.updatedAt &&
+          now - loc.updatedAt < 120000
+        ).length;
+
+      if(points.length > 0){
+        map.fitBounds(
+          L.latLngBounds(points),
+          {padding:[30,30],maxZoom:16}
+        );
+      }
+
+      $("mapStatus").textContent =
+        "মোট লোকেশন: " + points.length;
+
     },
 
     error => {
-      $("status").textContent =
-        "Map Database Error: " + error.message;
+      $("mapStatus").textContent =
+        "Database Error: " + error.message;
     }
   );
 }
 
+
+// REFRESH MAP
+window.refreshMap = () => {
+
+  if(!map) return;
+
+  map.invalidateSize();
+
+  if(lastMapData){
+    const points = Object.values(lastMapData)
+      .filter(loc =>
+        typeof loc.lat === "number" &&
+        typeof loc.lng === "number"
+      )
+      .map(loc => [loc.lat,loc.lng]);
+
+    if(points.length){
+      map.fitBounds(
+        L.latLngBounds(points),
+        {padding:[30,30],maxZoom:16}
+      );
+    }
+  }
+};
+
 </script>
 </body>
 </html>
+
