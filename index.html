@@ -2,148 +2,129 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="google-site-verification" content="qRDSuDo2iZ6ctYGFSfKIpCJWhId4ZC9Gzq06jcd6_hw">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#1264d8">
-
-<title>BD GPS Tracker – বাংলাদেশ ও বিশ্বব্যাপী GPS ট্র্যাকার</title>
-<meta name="description" content="BD GPS Tracker ব্যবহার করে সম্মতির ভিত্তিতে নিজের GPS লোকেশন দেখুন ও শেয়ার করুন।">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://mdakbor123.github.io/bd-gps-tracker/">
-<meta property="og:title" content="BD GPS Tracker">
-<meta property="og:description" content="সম্মতির ভিত্তিতে GPS লোকেশন দেখুন ও শেয়ার করুন।">
-<meta property="og:url" content="https://mdakbor123.github.io/bd-gps-tracker/">
-<meta property="og:type" content="website">
-
+<meta name="google-site-verification" content="qRDSuDo2iZ6ctYGFSfKIpCJWhId4ZC9Gzq06jcd6_hw">
+<title>BD GPS Tracker Global</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-
 <style>
+:root{--blue:#1264d8;--dark:#08449b;--bg:#f3f7ff;--text:#17243a;--muted:#64748b;--white:#fff;--border:#dce6f5;--green:#12834b;--red:#c62828}
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#eef4fc;color:#172b4d}
-header{background:#1264d8;color:white;padding:20px;text-align:center}
-header h2{margin:0}
-header p{margin:7px 0 0}
-.container{max-width:650px;margin:auto;padding:12px}
-.card{background:white;padding:17px;border-radius:14px;margin:13px 0;box-shadow:0 3px 12px #0001}
-h3{margin-top:0}
-button{width:100%;border:0;border-radius:9px;padding:13px;margin-top:9px;background:#1264d8;color:white;font-size:15px;cursor:pointer}
-button:disabled{opacity:.5;cursor:not-allowed}
-.secondary{background:#344b68}
-.danger{background:#d93030}
-input,select{width:100%;padding:13px;border:1px solid #ccd6e5;border-radius:8px;margin:7px 0;font-size:15px}
-.value{background:#edf4ff;padding:12px;border-radius:8px;margin:9px 0;overflow-wrap:anywhere}
-.status{color:#1264d8;font-weight:bold;overflow-wrap:anywhere}
-#map{height:330px;border-radius:10px;z-index:1}
-.small{font-size:12px;color:#667;line-height:1.6}
-.phone-item{background:#edf4ff;padding:12px;border-radius:9px;margin:9px 0;overflow-wrap:anywhere}
-.phone-item strong{display:block;margin-bottom:5px}
-.consent{display:flex;gap:10px;align-items:flex-start;line-height:1.5;margin:12px 0}
-.consent input{width:20px;height:20px;margin:2px 0;flex-shrink:0}
-a{color:#1264d8}
-footer{text-align:center;padding:20px;color:#667}
-.hidden{display:none}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,"Noto Sans Bengali",sans-serif}
+header{background:linear-gradient(120deg,var(--dark),var(--blue));color:white;padding:20px 14px;text-align:center}
+header h1{margin:0 0 6px;font-size:25px}
+header p{margin:0;font-size:14px}
+main{width:min(950px,100%);margin:15px auto;padding:0 12px 30px}
+.card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 3px 12px #153a6810}
+h2{font-size:18px;margin:0 0 13px;color:var(--dark)}
+label{display:block;font-weight:600;margin:10px 0 5px}
+input,button,select{font:inherit}
+input[type=email],input[type=password],input[type=text]{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:9px;background:white}
+button,.button{border:0;border-radius:9px;background:var(--blue);color:white;padding:11px 14px;font-weight:700;cursor:pointer;margin:5px 4px 5px 0}
+button.secondary{background:#e7efff;color:var(--dark)}
+button.danger{background:var(--red)}
+button:disabled{opacity:.55;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row>*{flex:1}
+.status{padding:10px;border-radius:9px;background:#eef4ff;margin:10px 0;font-size:14px;overflow-wrap:anywhere}
+.small{font-size:13px;color:var(--muted);line-height:1.55}
+#map{height:340px;border-radius:12px;border:1px solid var(--border);z-index:1}
+.data-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.data{background:#f5f8ff;padding:10px;border-radius:9px;overflow-wrap:anywhere}
+.data strong{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.data span{font-size:14px}
+.consent{display:flex;gap:9px;align-items:flex-start;background:#fff8e8;padding:12px;border-radius:9px;margin:12px 0}
+.consent input{margin-top:3px;transform:scale(1.2)}
+.phone-item{border:1px solid var(--border);padding:12px;border-radius:10px;margin:9px 0;overflow-wrap:anywhere}
+.phone-item a{display:inline-block;margin:7px 8px 0 0;color:var(--blue)}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+@media(max-width:520px){.data-grid{grid-template-columns:1fr}#map{height:290px}.row>*{min-width:100%}}
 </style>
 </head>
-
 <body>
 <header>
-<h2>🌍 BD GPS Tracker</h2>
-<p data-bn="বাংলাদেশ ও বিশ্বব্যাপী GPS ট্র্যাকার" data-en="Bangladesh and Worldwide GPS Tracker">বাংলাদেশ ও বিশ্বব্যাপী GPS ট্র্যাকার</p>
+  <h1>🌍 BD GPS Tracker</h1>
+  <p data-bn="বাংলাদেশ ও বিশ্বব্যাপী GPS ট্র্যাকার" data-en="GPS Tracker for Bangladesh and worldwide">বাংলাদেশ ও বিশ্বব্যাপী GPS ট্র্যাকার</p>
+  <div style="margin-top:12px">
+    <label for="language" style="display:inline;color:white">🌐 Language / ভাষা</label>
+    <select id="language" style="width:auto;padding:7px;border-radius:8px" onchange="setLanguage(this.value)">
+      <option value="bn">বাংলা</option><option value="en">English</option>
+    </select>
+  </div>
 </header>
 
-<div class="container">
+<main>
+  <section class="card">
+    <h2 data-bn="🔐 অ্যাকাউন্ট লগইন / রেজিস্ট্রেশন" data-en="🔐 Account Login / Registration">🔐 অ্যাকাউন্ট লগইন / রেজিস্ট্রেশন</h2>
+    <p class="small" data-bn="লোকেশন শেয়ার করতে আপনার নিজের অ্যাকাউন্টে লগইন করুন।" data-en="Sign in to your own account to share your location.">লোকেশন শেয়ার করতে আপনার নিজের অ্যাকাউন্টে লগইন করুন।</p>
+    <label for="email" data-bn="ইমেইল" data-en="Email">ইমেইল</label>
+    <input id="email" type="email" autocomplete="email" placeholder="আপনার ইমেইল">
+    <label for="password" data-bn="পাসওয়ার্ড" data-en="Password">পাসওয়ার্ড</label>
+    <input id="password" type="password" autocomplete="current-password" placeholder="পাসওয়ার্ড">
+    <div class="row">
+      <button onclick="registerUser()" data-bn="নতুন অ্যাকাউন্ট খুলুন" data-en="Create account">নতুন অ্যাকাউন্ট খুলুন</button>
+      <button onclick="loginUser()" data-bn="লগইন করুন" data-en="Log in">লগইন করুন</button>
+      <button class="secondary" onclick="logoutUser()" data-bn="লগআউট" data-en="Log out">লগআউট</button>
+    </div>
+    <div id="authStatus" class="status" role="status">Firebase সংযোগ হচ্ছে...</div>
+  </section>
 
-<div class="card">
-<h3>🌐 Language / ভাষা</h3>
-<select id="language" onchange="changeLanguage()">
-<option value="bn">বাংলা</option>
-<option value="en">English</option>
-</select>
-</div>
+  <section class="card">
+    <h2 data-bn="📍 আমার GPS লোকেশন" data-en="📍 My GPS Location">📍 আমার GPS লোকেশন</h2>
+    <div id="gpsStatus" class="status">GPS বন্ধ আছে</div>
+    <div class="row">
+      <button onclick="startTracking()" data-bn="GPS চালু করুন" data-en="Start GPS">GPS চালু করুন</button>
+      <button class="danger" onclick="stopTracking()" data-bn="GPS বন্ধ করুন" data-en="Stop GPS">GPS বন্ধ করুন</button>
+    </div>
+    <div class="data-grid">
+      <div class="data"><strong>Latitude</strong><span id="latitude">---</span></div>
+      <div class="data"><strong>Longitude</strong><span id="longitude">---</span></div>
+      <div class="data"><strong>Accuracy</strong><span id="accuracy">---</span></div>
+      <div class="data"><strong data-bn="সর্বশেষ আপডেট" data-en="Last Updated">সর্বশেষ আপডেট</strong><span id="lastUpdated">---</span></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button class="secondary" onclick="copyLocation()" data-bn="লোকেশন কপি" data-en="Copy location">লোকেশন কপি</button>
+      <button class="secondary" onclick="openGoogleMaps()" data-bn="Google Maps খুলুন" data-en="Open Google Maps">Google Maps খুলুন</button>
+    </div>
+  </section>
 
-<div class="card">
-<h3 data-bn="📍 GPS লোকেশন" data-en="📍 GPS Location">📍 GPS লোকেশন</h3>
-<p id="gpsStatus" class="status">GPS বন্ধ আছে</p>
-<button id="startBtn" onclick="startTracking()" data-bn="GPS চালু করুন" data-en="Start GPS">GPS চালু করুন</button>
-<button id="stopBtn" class="danger" onclick="stopTracking()" disabled data-bn="GPS বন্ধ করুন" data-en="Stop GPS">GPS বন্ধ করুন</button>
+  <section class="card">
+    <h2 data-bn="🛡️ লোকেশন শেয়ারিং সম্মতি" data-en="🛡️ Location Sharing Consent">🛡️ লোকেশন শেয়ারিং সম্মতি</h2>
+    <p class="small" data-bn="আপনার অনুমতি ছাড়া লোকেশন অন্য ব্যবহারকারীদের কাছে শেয়ার হবে না। শেয়ারিং বন্ধ করলে আপনার শেয়ার করা লোকেশন মুছে দেওয়া হবে।" data-en="Your location will not be shared with other users without your permission. Turning sharing off removes your shared location.">আপনার অনুমতি ছাড়া লোকেশন অন্য ব্যবহারকারীদের কাছে শেয়ার হবে না। শেয়ারিং বন্ধ করলে আপনার শেয়ার করা লোকেশন মুছে দেওয়া হবে।</p>
+    <div class="consent">
+      <input type="checkbox" id="shareConsent" onchange="changeSharing(this.checked)">
+      <label for="shareConsent" style="margin:0;font-weight:500" data-bn="আমি সম্মতি দিচ্ছি যে GPS চালু থাকা অবস্থায় আমার বর্তমান লোকেশন অন্য লগইন করা ব্যবহারকারীরা দেখতে পারবেন।" data-en="I consent to let other signed-in users see my current location while GPS is running.">আমি সম্মতি দিচ্ছি যে GPS চালু থাকা অবস্থায় আমার বর্তমান লোকেশন অন্য লগইন করা ব্যবহারকারীরা দেখতে পারবেন।</label>
+    </div>
+    <div id="sharingStatus" class="status">লোকেশন শেয়ারিং বন্ধ আছে।</div>
+  </section>
 
-<div class="value">Latitude<div id="latitude">---</div></div>
-<div class="value">Longitude<div id="longitude">---</div></div>
-<div class="value">Accuracy<div id="accuracy">---</div></div>
-<div class="value"><span data-bn="সর্বশেষ আপডেট" data-en="Last Updated">সর্বশেষ আপডেট</span><div id="updated">---</div></div>
+  <section class="card">
+    <h2 data-bn="🗺️ ম্যাপ" data-en="🗺️ Map">🗺️ ম্যাপ</h2>
+    <div id="map" aria-label="GPS map"></div>
+  </section>
 
-<button class="secondary" onclick="copyLocation()" data-bn="লোকেশন কপি করুন" data-en="Copy Location">লোকেশন কপি করুন</button>
-<button onclick="openGoogleMaps()" data-bn="Google Maps খুলুন" data-en="Open Google Maps">Google Maps খুলুন</button>
-</div>
+  <section class="card">
+    <h2 data-bn="👥 সম্মতি দিয়ে শেয়ার করা লোকেশন" data-en="👥 Consensually Shared Locations">👥 সম্মতি দিয়ে শেয়ার করা লোকেশন</h2>
+    <input id="nameSearch" type="text" placeholder="নাম দিয়ে খুঁজুন" oninput="renderSharedUsers()">
+    <button class="secondary" onclick="refreshShared()" data-bn="তালিকা রিফ্রেশ" data-en="Refresh list">তালিকা রিফ্রেশ</button>
+    <div id="sharedUsers" class="small">লগইন করলে শেয়ার করা ব্যবহারকারীদের তালিকা দেখাবে।</div>
+  </section>
 
-<div class="card">
-<h3 data-bn="🔐 লোকেশন শেয়ারিং" data-en="🔐 Location Sharing">🔐 লোকেশন শেয়ারিং</h3>
-<p class="small" data-bn="আপনার সম্মতিতে অন্য লগইন করা ব্যবহারকারীরা আপনার লোকেশন দেখতে পারবেন। সম্মতি না দিলে লোকেশন শেয়ার হবে না।" data-en="Other logged-in users can see your location only with your consent. Your location will not be shared without permission.">আপনার সম্মতিতে অন্য লগইন করা ব্যবহারকারীরা আপনার লোকেশন দেখতে পারবেন। সম্মতি না দিলে লোকেশন শেয়ার হবে না।</p>
+  <section class="card">
+    <h2 data-bn="🔒 গোপনীয়তা" data-en="🔒 Privacy">🔒 গোপনীয়তা</h2>
+    <p class="small" data-bn="এই অ্যাপ আপনার ডিভাইসের GPS অনুমতি চায়। লোকেশন শেয়ারিং আলাদা সম্মতির মাধ্যমে চালু হয়। আপনি সম্মতি প্রত্যাহার করলে শেয়ার করা লোকেশন মুছে ফেলা হয়। কাউকে তার অনুমতি ছাড়া ট্র্যাক করার জন্য এই অ্যাপ ব্যবহার করবেন না।" data-en="This app requests your device GPS permission. Location sharing requires separate consent. When you withdraw consent, your shared location is removed. Do not use this app to track anyone without their permission.">এই অ্যাপ আপনার ডিভাইসের GPS অনুমতি চায়। লোকেশন শেয়ারিং আলাদা সম্মতির মাধ্যমে চালু হয়। আপনি সম্মতি প্রত্যাহার করলে শেয়ার করা লোকেশন মুছে ফেলা হয়। কাউকে তার অনুমতি ছাড়া ট্র্যাক করার জন্য এই অ্যাপ ব্যবহার করবেন না।</p>
+  </section>
+</main>
+<footer>BD GPS Tracker · Consent-based location sharing</footer>
 
-<label class="consent">
-<input type="checkbox" id="shareConsent" onchange="changeSharing()">
-<span data-bn="আমি সম্মতি দিচ্ছি যে আমার বর্তমান GPS লোকেশন অন্য লগইন করা ব্যবহারকারীরা দেখতে পারবেন।" data-en="I consent to sharing my current GPS location with other logged-in users.">আমি সম্মতি দিচ্ছি যে আমার বর্তমান GPS লোকেশন অন্য লগইন করা ব্যবহারকারীরা দেখতে পারবেন।</span>
-</label>
-
-<p id="sharingStatus" class="status">লোকেশন শেয়ার বন্ধ আছে</p>
-</div>
-
-<div class="card">
-<h3 data-bn="🗺️ লাইভ লোকেশন ম্যাপ" data-en="🗺️ Live Location Map">🗺️ লাইভ লোকেশন ম্যাপ</h3>
-<div id="map"></div>
-<p class="small" data-bn="নীল = নিজের লোকেশন | সবুজ = অন্য শেয়ার করা ব্যবহারকারী" data-en="Blue = Your location | Green = Other shared users">নীল = নিজের লোকেশন | সবুজ = অন্য শেয়ার করা ব্যবহারকারী</p>
-</div>
-
-<div class="card">
-<h3 data-bn="🔎 নাম দিয়ে ব্যবহারকারী খুঁজুন" data-en="🔎 Search Users by Name">🔎 নাম দিয়ে ব্যবহারকারী খুঁজুন</h3>
-<input id="nameSearch" type="search" placeholder="ব্যবহারকারীর নাম লিখুন..." oninput="searchSharedUsers()">
-<div id="sharedUsers">
-<p class="small">Login করলে শেয়ার করা ব্যবহারকারীদের তালিকা দেখাবে।</p>
-</div>
-<button class="secondary" onclick="refreshShared()" data-bn="লোকেশন Refresh করুন" data-en="Refresh Locations">লোকেশন Refresh করুন</button>
-</div>
-
-<div class="card">
-<h3>🔥 Firebase Connection</h3>
-<p class="small" data-bn="Firebase স্বয়ংক্রিয়ভাবে সংযুক্ত হওয়ার চেষ্টা করবে। সংযোগ না হলে নিচের তথ্য যাচাই করুন।" data-en="Firebase will try to connect automatically. If it fails, check the configuration below.">Firebase স্বয়ংক্রিয়ভাবে সংযুক্ত হওয়ার চেষ্টা করবে। সংযোগ না হলে নিচের তথ্য যাচাই করুন।</p>
-
-<input id="apiKey" placeholder="Firebase API Key">
-<input id="authDomain" placeholder="Auth Domain">
-<input id="databaseURL" placeholder="Database URL">
-<input id="projectId" placeholder="Project ID">
-<input id="appId" placeholder="App ID">
-<button onclick="connectFirebase()">Firebase Connect</button>
-<p id="firebaseStatus" class="status">Firebase সংযোগ হচ্ছে...</p>
-</div>
-
-<div class="card">
-<h3 data-bn="👤 ব্যবহারকারীর অ্যাকাউন্ট" data-en="👤 User Account">👤 ব্যবহারকারীর অ্যাকাউন্ট</h3>
-<input id="userName" placeholder="আপনার নাম" autocomplete="name">
-<input id="userEmail" type="email" placeholder="Email" autocomplete="email">
-<input id="userPassword" type="password" placeholder="Password (কমপক্ষে ৬ অক্ষর)" autocomplete="current-password">
-
-<button onclick="registerUser()" data-bn="নতুন Account তৈরি করুন" data-en="Create New Account">নতুন Account তৈরি করুন</button>
-<button class="secondary" onclick="loginUser()" data-bn="Login করুন" data-en="Login">Login করুন</button>
-<button class="danger" onclick="logoutUser()" data-bn="Logout করুন" data-en="Logout">Logout করুন</button>
-<p id="userStatus" class="status">Login করা হয়নি</p>
-</div>
-
-<div class="card">
-<h3 data-bn="🔒 গোপনীয়তা ও নিরাপত্তা" data-en="🔒 Privacy & Security">🔒 গোপনীয়তা ও নিরাপত্তা</h3>
-<p class="small" data-bn="অনুমতি ছাড়া কোনো ফোন ট্র্যাক করা হবে না। নিজের ফোনের GPS চালু করতে হবে। লোকেশন শেয়ার করতে হলে Login এবং সম্মতি প্রয়োজন।" data-en="No phone will be tracked without permission. GPS must be enabled on your own phone. Login and consent are required to share your location.">অনুমতি ছাড়া কোনো ফোন ট্র্যাক করা হবে না। নিজের ফোনের GPS চালু করতে হবে। লোকেশন শেয়ার করতে হলে Login এবং সম্মতি প্রয়োজন।</p>
-</div>
-
-</div>
-
-<footer>BD GPS Tracker Global © 2026</footer>
-
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-
 <script>
-/* Firebase configuration */
+"use strict";
+
+/* Firebase web configuration */
 const firebaseConfig = {
   apiKey: "AIzaSyD7eyFrt6xkzzWvrBGRsV5e0fXxKB3O97Q",
   authDomain: "bd-gps-tracker.firebaseapp.com",
@@ -155,458 +136,253 @@ const firebaseConfig = {
   measurementId: "G-ZMSSHYR6SY"
 };
 
-let watchID = null;
-let latitude = null;
-let longitude = null;
-let accuracy = null;
-
-let map = null;
-let marker = null;
-let sharedMarkers = {};
-
-let auth = null;
-let database = null;
-let currentUser = null;
-let firebaseReady = false;
-let sharedListener = null;
-let sharingEnabled = false;
-let sharedUsersData = [];
-let lastLocation = null;
+let auth = null, database = null, currentUser = null;
+let map = null, myMarker = null, accuracyCircle = null;
+let watchID = null, currentPosition = null, sharingEnabled = false;
+let sharedListener = null, sharedMarkers = {}, sharedUsersData = [];
+let language = "bn";
+const $ = id => document.getElementById(id);
 
 const translations = {
   bn: {
-    waiting: "লোকেশন সংগ্রহ হচ্ছে...",
-    success: "লোকেশন পাওয়া গেছে",
-    denied: "লোকেশন অনুমতি দেওয়া হয়নি",
-    error: "লোকেশন পাওয়া যায়নি",
-    off: "GPS বন্ধ আছে",
-    shareOff: "লোকেশন শেয়ার বন্ধ আছে",
-    loginFirst: "আগে Login করুন",
-    firebaseFirst: "আগে Firebase Connect করুন",
-    gpsFirst: "আগে GPS চালু করুন",
-    copied: "লোকেশন কপি হয়েছে",
-    loginSuccess: "Login সফল হয়েছে",
-    accountSuccess: "Account তৈরি হয়েছে",
-    loggedOut: "Login করা হয়নি",
-    noUsers: "কোনো শেয়ার করা ব্যবহারকারী পাওয়া যায়নি।"
+    firebaseOk:"Firebase সংযুক্ত হয়েছে।", firebaseFail:"Firebase সংযোগ ব্যর্থ: ",
+    loginFirst:"প্রথমে লগইন করুন।", gpsUnsupported:"এই ব্রাউজারে GPS সমর্থিত নয়।",
+    gpsPermission:"GPS অনুমতি দিন এবং HTTPS ওয়েবসাইট ব্যবহার করুন।",
+    gpsOn:"GPS চালু আছে।", gpsOff:"GPS বন্ধ আছে।",
+    shareOn:"লোকেশন শেয়ারিং চালু হয়েছে।", shareOff:"লোকেশন শেয়ারিং বন্ধ আছে।",
+    noUsers:"এই মুহূর্তে শেয়ার করা কোনো লোকেশন পাওয়া যায়নি।",
+    loginOk:"লগইন সফল।", logoutOk:"লগআউট হয়েছে।",
+    invalid:"সঠিক ইমেইল ও কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড দিন।"
   },
   en: {
-    waiting: "Getting location...",
-    success: "Location received",
-    denied: "Location permission denied",
-    error: "Unable to get location",
-    off: "GPS is stopped",
-    shareOff: "Location sharing is off",
-    loginFirst: "Please login first",
-    firebaseFirst: "Connect Firebase first",
-    gpsFirst: "Start GPS first",
-    copied: "Location copied",
-    loginSuccess: "Login successful",
-    accountSuccess: "Account created",
-    loggedOut: "Not logged in",
-    noUsers: "No shared users found."
+    firebaseOk:"Firebase connected.", firebaseFail:"Firebase connection failed: ",
+    loginFirst:"Please log in first.", gpsUnsupported:"GPS is not supported by this browser.",
+    gpsPermission:"Allow GPS permission and use the HTTPS website.",
+    gpsOn:"GPS is running.", gpsOff:"GPS is off.",
+    shareOn:"Location sharing is on.", shareOff:"Location sharing is off.",
+    noUsers:"No shared locations are available right now.",
+    loginOk:"Login successful.", logoutOk:"Logged out.",
+    invalid:"Enter a valid email and a password of at least 6 characters."
   }
 };
-
-function lang() {
-  return document.getElementById("language").value;
-}
-
-function msg(key) {
-  return translations[lang()][key] || key;
-}
-
-function changeLanguage() {
-  const selected = lang();
-  document.documentElement.lang = selected;
-
-  document.querySelectorAll("[data-bn][data-en]").forEach(element => {
-    element.textContent = element.getAttribute("data-" + selected);
+function msg(key){return translations[language][key] || key;}
+function setLanguage(value){
+  language = value === "en" ? "en" : "bn";
+  document.documentElement.lang = language;
+  document.querySelectorAll("[data-bn][data-en]").forEach(el=>{
+    el.textContent = el.dataset[language];
   });
-
-  document.getElementById("userName").placeholder =
-    selected === "bn" ? "আপনার নাম" : "Your Name";
-
-  document.getElementById("nameSearch").placeholder =
-    selected === "bn" ? "ব্যবহারকারীর নাম লিখুন..." : "Search user name...";
-
-  document.getElementById("gpsStatus").textContent =
-    watchID === null ? msg("off") : document.getElementById("gpsStatus").textContent;
+  $("email").placeholder = language === "bn" ? "আপনার ইমেইল" : "Your email";
+  $("password").placeholder = language === "bn" ? "পাসওয়ার্ড" : "Password";
+  $("nameSearch").placeholder = language === "bn" ? "নাম দিয়ে খুঁজুন" : "Search by name";
+  if (!sharingEnabled) $("sharingStatus").textContent = msg("shareOff");
 }
+function setStatus(id,text){$(id).textContent=text;}
 
-/* Map */
-function initializeMap() {
-  if (map) return;
-
-  map = L.map("map").setView([23.8103, 90.4125], 5);
-
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: "© OpenStreetMap"
-  }).addTo(map);
-}
-
-initializeMap();
-
-/* GPS Start */
-function startTracking() {
-  if (!firebaseReady || !currentUser) {
-    alert(msg("firebaseFirst") + " / " + msg("loginFirst"));
-    return;
-  }
-
-  if (!navigator.geolocation) {
-    alert("এই ব্রাউজারে GPS Support নেই");
-    return;
-  }
-
-  if (watchID !== null) return;
-
-  document.getElementById("gpsStatus").textContent = msg("waiting");
-  document.getElementById("startBtn").disabled = true;
-  document.getElementById("stopBtn").disabled = false;
-
-  watchID = navigator.geolocation.watchPosition(position => {
-    latitude = position.coords.latitude;
-    longitude = position.coords.longitude;
-    accuracy = position.coords.accuracy;
-
-    lastLocation = {
-      latitude: latitude,
-      longitude: longitude,
-      accuracy: accuracy
-    };
-
-    document.getElementById("latitude").textContent = latitude.toFixed(7);
-    document.getElementById("longitude").textContent = longitude.toFixed(7);
-    document.getElementById("accuracy").textContent = accuracy.toFixed(2) + " meters";
-    document.getElementById("updated").textContent = new Date().toLocaleString();
-    document.getElementById("gpsStatus").textContent = msg("success");
-
-    updateOwnMap();
-    saveLocation();
-
-  }, error => {
-    const errorText = error.code === 1 ? msg("denied") : msg("error");
-
-    document.getElementById("gpsStatus").textContent =
-      errorText + " (" + error.message + ")";
-
-    stopTracking();
-
-  }, {
-    enableHighAccuracy: true,
-    maximumAge: 3000,
-    timeout: 20000
-  });
-}
-
-/* GPS Stop */
-function stopTracking() {
-  if (watchID !== null) {
-    navigator.geolocation.clearWatch(watchID);
-    watchID = null;
-  }
-
-  document.getElementById("startBtn").disabled = false;
-  document.getElementById("stopBtn").disabled = true;
-  document.getElementById("gpsStatus").textContent = msg("off");
-
-  removeSharedLocation();
-}
-
-/* Own marker */
-function updateOwnMap() {
-  if (latitude === null || !map) return;
-
-  const point = [latitude, longitude];
-
-  if (marker) {
-    marker.setLatLng(point);
-  } else {
-    marker = L.marker(point).addTo(map);
-  }
-
-  marker.bindPopup("Your Location");
-  map.setView(point, 16);
-}
-
-/* Google Maps */
-function openGoogleMaps() {
-  if (latitude === null) {
-    alert(msg("gpsFirst"));
-    return;
-  }
-
-  window.open(
-    "https://www.google.com/maps?q=" + latitude + "," + longitude,
-    "_blank",
-    "noopener"
-  );
-}
-
-/* Copy location */
-function copyLocation() {
-  if (latitude === null) {
-    alert(msg("gpsFirst"));
-    return;
-  }
-
-  const value =
-    "BD GPS Tracker\nLatitude: " + latitude +
-    "\nLongitude: " + longitude;
-
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(value)
-      .then(() => alert(msg("copied")))
-      .catch(() => prompt("কপি করুন / Copy", value));
-  } else {
-    prompt("কপি করুন / Copy", value);
-  }
-}
-
-/* Firebase connect */
-function connectFirebase() {
-  try {
-    if (!window.firebase) {
-      throw new Error("Firebase SDK লোড হয়নি। Internet সংযোগ পরীক্ষা করুন।");
-    }
-
-    if (firebase.apps.length) {
-      const existingApp = firebase.app();
-
-      if (existingApp.options.projectId !== firebaseConfig.projectId) {
-        throw new Error("ভুল Firebase Project সংযুক্ত আছে। পেজ Reload করুন।");
-      }
-    } else {
-      firebase.initializeApp(firebaseConfig);
-    }
-
+function connectFirebase(){
+  try{
+    if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     auth = firebase.auth();
     database = firebase.database();
-    firebaseReady = true;
-
-    document.getElementById("firebaseStatus").textContent =
-      "Firebase Connected";
-
-    auth.onAuthStateChanged(user => {
-      currentUser = user;
-
-      if (user) {
-        updateUserStatus();
+    auth.onAuthStateChanged(user=>{
+      currentUser=user;
+      if(user){
+        setStatus("authStatus",(language==="bn"?"লগইন হয়েছে: ":"Signed in: ")+user.email);
         listenSharedLocations();
-        checkOwnSharing();
-      } else {
-        if (watchID !== null) {
-          navigator.geolocation.clearWatch(watchID);
-          watchID = null;
-        }
-
-        document.getElementById("startBtn").disabled = false;
-        document.getElementById("stopBtn").disabled = true;
-
+      }else{
+        setStatus("authStatus",language==="bn"?"লগইন করা নেই।":"Not signed in.");
         detachSharedListener();
-        sharingEnabled = false;
-        document.getElementById("shareConsent").checked = false;
-        document.getElementById("sharingStatus").textContent = msg("shareOff");
-
-        updateUserStatus();
+        sharingEnabled=false;
+        $("shareConsent").checked=false;
+        setStatus("sharingStatus",msg("shareOff"));
+        $("sharedUsers").textContent=language==="bn"?"লগইন করলে শেয়ার করা ব্যবহারকারীদের তালিকা দেখাবে।":"Sign in to view shared users.";
       }
     });
-
-  } catch (error) {
-    firebaseReady = false;
-    document.getElementById("firebaseStatus").textContent =
-      "Firebase Error: " + error.message;
+  }catch(error){
+    setStatus("authStatus",msg("firebaseFail")+error.message);
   }
 }
-
-/* Register */
-function registerUser() {
-  if (!firebaseReady) {
-    alert(msg("firebaseFirst"));
-    return;
-  }
-
-  const name = document.getElementById("userName").value.trim();
-  const email = document.getElementById("userEmail").value.trim();
-  const password = document.getElementById("userPassword").value;
-
-  if (!name || !email || password.length < 6) {
-    alert("নাম, সঠিক Email এবং কমপক্ষে ৬ অক্ষরের Password দিন।");
-    return;
-  }
-
-  auth.createUserWithEmailAndPassword(email, password)
-    .then(result => {
-      return result.user.updateProfile({
-        displayName: name
-      }).then(() => {
-        return database.ref("users/" + result.user.uid + "/profile").set({
-          name: name,
-          createdAt: firebase.database.ServerValue.TIMESTAMP
-        });
-      });
-    })
-    .then(() => {
-      alert(msg("accountSuccess"));
-    })
-    .catch(error => {
-      alert("Account Error: " + error.message);
-    });
+function credentials(){
+  const email=$("email").value.trim(), password=$("password").value;
+  if(!email || password.length<6){alert(msg("invalid"));return null;}
+  return {email,password};
+}
+async function registerUser(){
+  const c=credentials(); if(!c||!auth)return;
+  try{await auth.createUserWithEmailAndPassword(c.email,c.password);alert(language==="bn"?"অ্যাকাউন্ট তৈরি হয়েছে।":"Account created.");}
+  catch(e){alert(e.message);}
+}
+async function loginUser(){
+  const c=credentials(); if(!c||!auth)return;
+  try{await auth.signInWithEmailAndPassword(c.email,c.password);alert(msg("loginOk"));}
+  catch(e){alert(e.message);}
+}
+async function logoutUser(){
+  if(!auth)return;
+  try{
+    if(currentUser && sharingEnabled) await revokeSharing();
+    stopTracking(false);
+    await auth.signOut();
+    alert(msg("logoutOk"));
+  }catch(e){alert(e.message);}
 }
 
-/* Login */
-function loginUser() {
-  if (!firebaseReady) {
-    alert(msg("firebaseFirst"));
-    return;
-  }
-
-  const email = document.getElementById("userEmail").value.trim();
-  const password = document.getElementById("userPassword").value;
-
-  if (!email || !password) {
-    alert("Email ও Password দিন।");
-    return;
-  }
-
-  auth.signInWithEmailAndPassword(email, password)
-    .then(() => {
-      alert(msg("loginSuccess"));
-    })
-    .catch(error => {
-      let message = error.message;
-
-      if (error.code === "auth/invalid-credential" ||
-          error.code === "auth/wrong-password" ||
-          error.code === "auth/user-not-found") {
-        message = "Email অথবা Password সঠিক নয়।";
-      } else if (error.code === "auth/too-many-requests") {
-        message = "অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে চেষ্টা করুন।";
-      }
-
-      alert("Login Error: " + message);
-    });
+function startTracking(){
+  if(!currentUser){alert(msg("loginFirst"));return;}
+  if(!navigator.geolocation){alert(msg("gpsUnsupported"));return;}
+  if(watchID!==null)return;
+  setStatus("gpsStatus",language==="bn"?"GPS চালু করার চেষ্টা হচ্ছে...":"Starting GPS...");
+  watchID=navigator.geolocation.watchPosition(handlePosition,error=>{
+    setStatus("gpsStatus",(language==="bn"?"GPS সমস্যা: ":"GPS error: ")+error.message);
+  },{enableHighAccuracy:true,maximumAge:5000,timeout:20000});
 }
-
-/* Logout */
-function logoutUser() {
-  if (!auth || !currentUser) {
-    alert(msg("loginFirst"));
-    return;
-  }
-
-  stopTracking();
-
-  auth.signOut()
-    .then(() => {
-      currentUser = null;
-      updateUserStatus();
-    })
-    .catch(error => alert("Logout Error: " + error.message));
+function handlePosition(position){
+  currentPosition=position;
+  const c=position.coords, lat=c.latitude, lng=c.longitude;
+  $("latitude").textContent=lat.toFixed(6);
+  $("longitude").textContent=lng.toFixed(6);
+  $("accuracy").textContent=Math.round(c.accuracy)+" m";
+  $("lastUpdated").textContent=new Date(position.timestamp).toLocaleString();
+  setStatus("gpsStatus",msg("gpsOn"));
+  const point=[lat,lng];
+  if(!myMarker) myMarker=L.marker(point).addTo(map).bindPopup(language==="bn"?"আপনার লোকেশন":"Your location");
+  else myMarker.setLatLng(point);
+  if(!accuracyCircle) accuracyCircle=L.circle(point,{radius:c.accuracy,color:"#1264d8",fillOpacity:.08}).addTo(map);
+  else accuracyCircle.setLatLng(point).setRadius(c.accuracy);
+  if(!map._hasCenteredOnUser){map.setView(point,15);map._hasCenteredOnUser=true;}
+  if(sharingEnabled) publishLocation(position);
 }
-
-/* User status */
-function updateUserStatus() {
-  const element = document.getElementById("userStatus");
-
-  if (currentUser) {
-    element.textContent =
-      "Logged in: " + currentUser.email;
-  } else {
-    element.textContent = msg("loggedOut");
-  }
+function stopTracking(showMessage=true){
+  if(watchID!==null){navigator.geolocation.clearWatch(watchID);watchID=null;}
+  if(sharingEnabled) revokeSharing();
+  if(showMessage)setStatus("gpsStatus",msg("gpsOff"));
 }
-
-/* Consent */
-function changeSharing() {
-  if (!firebaseReady || !currentUser) {
-    document.getElementById("shareConsent").checked = false;
-    alert(msg("loginFirst"));
-    return;
+async function changeSharing(checked){
+  if(!currentUser){
+    $("shareConsent").checked=false;
+    alert(msg("loginFirst"));return;
   }
-
-  sharingEnabled = document.getElementById("shareConsent").checked;
-
-  if (sharingEnabled) {
-    document.getElementById("sharingStatus").textContent =
-      "সম্মতি দেওয়া হয়েছে। এখন GPS চালু করুন।";
-
-    if (lastLocation) {
-      saveLocation();
+  if(checked){
+    if(!currentPosition){
+      $("shareConsent").checked=false;
+      alert(language==="bn"?"প্রথমে GPS চালু করুন এবং আপনার লোকেশন পাওয়া পর্যন্ত অপেক্ষা করুন।":"Start GPS and wait for your location first.");
+      return;
     }
-  } else {
-    removeSharedLocation();
+    sharingEnabled=true;
+    try{
+      await publishLocation(currentPosition);
+      setStatus("sharingStatus",msg("shareOn"));
+    }catch(e){
+      sharingEnabled=false;$("shareConsent").checked=false;
+      setStatus("sharingStatus",e.message);
+    }
+  }else{
+    await revokeSharing();
   }
 }
-
-/* Save location */
-function saveLocation() {
-  if (!firebaseReady || !currentUser || !lastLocation) return;
-
-  const uid = currentUser.uid;
-
-  const data = {
-    latitude: lastLocation.latitude,
-    longitude: lastLocation.longitude,
-    accuracy: lastLocation.accuracy,
-    timestamp: firebase.database.ServerValue.TIMESTAMP
+async function publishLocation(position){
+  if(!database||!currentUser||!sharingEnabled)return;
+  const c=position.coords;
+  const payload={
+    name:currentUser.email ? currentUser.email.split("@")[0] : "BD GPS User",
+    latitude:c.latitude,longitude:c.longitude,
+    accuracy:c.accuracy,timestamp:Date.now()
   };
-
-  /* ব্যক্তিগত লোকেশন শুধু নিজের অ্যাকাউন্টে */
-  database.ref("users/" + uid + "/location").set(data)
-    .catch(error => {
-      document.getElementById("firebaseStatus").textContent =
-        "Database Error: " + error.message;
-    });
-
-  /* সম্মতি থাকলেই অন্যদের সঙ্গে শেয়ার */
-  if (sharingEnabled) {
-    const sharedData = {
-      name: currentUser.displayName || "BD GPS User",
-      latitude: lastLocation.latitude,
-      longitude: lastLocation.longitude,
-      accuracy: lastLocation.accuracy,
-      timestamp: firebase.database.ServerValue.TIMESTAMP
-    };
-
-    database.ref("sharedLocations/" + uid).set(sharedData)
-      .then(() => {
-        document.getElementById("sharingStatus").textContent =
-          "আপনার লোকেশন Live Share হচ্ছে";
-      })
-      .catch(error => {
-        document.getElementById("sharingStatus").textContent =
-          "Sharing Error: " + error.message;
-      });
-  }
+  await database.ref("sharedLocations/"+currentUser.uid).set(payload);
 }
-
-/* Remove shared location */
-function removeSharedLocation() {
-  sharingEnabled = false;
-
-  document.getElementById("shareConsent").checked = false;
-
-  if (!database || !currentUser) {
-    document.getElementById("sharingStatus").textContent = msg("shareOff");
-    return;
+async function revokeSharing(){
+  sharingEnabled=false;
+  $("shareConsent").checked=false;
+  if(database&&currentUser){
+    try{await database.ref("sharedLocations/"+currentUser.uid).remove();}
+    catch(e){setStatus("sharingStatus",(language==="bn"?"শেয়ারিং বন্ধ করতে সমস্যা: ":"Could not stop sharing: ")+e.message);return;}
   }
-
-  database.ref("sharedLocations/" + currentUser.uid).remove()
-    .then(() => {
-      document.getElementById("sharingStatus").textContent = msg("shareOff");
-    })
-    .catch(error => {
-      document.getElementById("sharingStatus").textContent =
-        "Error: " + error.message;
-    });
+  setStatus("sharingStatus",msg("shareOff"));
 }
-
-/* Check previous sharing consent */
-function checkOwnSharing() {
-  if (!database || !currentUser) return;
-
-  database.ref("sharedLocations/" + currentUser.uid)
-    
+async function copyLocation(){
+  if(!currentPosition){alert(language==="bn"?"আগে GPS চালু করুন।":"Start GPS first.");return;}
+  const c=currentPosition.coords;
+  const text=`${c.latitude}, ${c.longitude}`;
+  try{await navigator.clipboard.writeText(text);alert(language==="bn"?"লোকেশন কপি হয়েছে।":"Location copied.");}
+  catch(e){prompt(language==="bn"?"লোকেশন কপি করুন:":"Copy location:",text);}
+}
+function openGoogleMaps(){
+  if(!currentPosition){alert(language==="bn"?"আগে GPS চালু করুন।":"Start GPS first.");return;}
+  const c=currentPosition.coords;
+  window.open(`https://www.google.com/maps?q=${c.latitude},${c.longitude}`,"_blank","noopener");
+}
+function initMap(){
+  map=L.map("map").setView([23.8103,90.4125],6);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
+    maxZoom:19,attribution:"&copy; OpenStreetMap contributors"
+  }).addTo(map);
+}
+function detachSharedListener(){
+  if(sharedListener&&database)database.ref("sharedLocations").off("value",sharedListener);
+  sharedListener=null;
+  Object.values(sharedMarkers).forEach(marker=>{if(map)map.removeLayer(marker);});
+  sharedMarkers={};sharedUsersData=[];
+}
+function listenSharedLocations(){
+  if(!database||!currentUser)return;
+  detachSharedListener();
+  sharedListener=snapshot=>{
+    const users=snapshot.val()||{}, active=[];
+    sharedUsersData=[];
+    Object.keys(users).forEach(uid=>{
+      const user=users[uid];if(!user)return;
+      const lat=Number(user.latitude),lng=Number(user.longitude);
+      if(!Number.isFinite(lat)||!Number.isFinite(lng)||lat < -90||lat > 90||lng < -180||lng > 180)return;
+      active.push(uid);
+      if(uid===currentUser.uid)return;
+      sharedUsersData.push({uid,name:user.name||"BD GPS User",latitude:lat,longitude:lng,accuracy:user.accuracy,timestamp:user.timestamp});
+      if(sharedMarkers[uid])sharedMarkers[uid].setLatLng([lat,lng]);
+      else sharedMarkers[uid]=L.marker([lat,lng]).addTo(map);
+      sharedMarkers[uid].bindPopup(escapeHTML(user.name||"BD GPS User")+"<br>"+lat.toFixed(6)+", "+lng.toFixed(6));
+    });
+    Object.keys(sharedMarkers).forEach(uid=>{
+      if(!active.includes(uid)){map.removeLayer(sharedMarkers[uid]);delete sharedMarkers[uid];}
+    });
+    renderSharedUsers();
+  };
+  database.ref("sharedLocations").on("value",sharedListener,error=>{
+    setStatus("sharedUsers",(language==="bn"?"ডাটাবেস সমস্যা: ":"Database error: ")+error.message);
+  });
+}
+function renderSharedUsers(){
+  const search=$("nameSearch").value.trim().toLowerCase();
+  const results=sharedUsersData.filter(user=>user.name.toLowerCase().includes(search));
+  if(!results.length){$("sharedUsers").textContent=msg("noUsers");return;}
+  $("sharedUsers").innerHTML=results.map(user=>{
+    const name=escapeHTML(user.name);
+    const date=user.timestamp?new Date(user.timestamp).toLocaleString():"Unknown";
+    return `<div class="phone-item"><strong>📍 ${name}</strong>
+      <div>Latitude: ${user.latitude.toFixed(6)}</div>
+      <div>Longitude: ${user.longitude.toFixed(6)}</div>
+      <div>Updated: ${escapeHTML(date)}</div>
+      <button onclick="focusShared('${encodeURIComponent(user.uid)}')">${language==="bn"?"ম্যাপে দেখুন":"Show on map"}</button>
+      <a target="_blank" rel="noopener" href="https://www.google.com/maps?q=${user.latitude},${user.longitude}">Google Maps</a>
+    </div>`;
+  }).join("");
+}
+function focusShared(encodedUid){
+  const uid=decodeURIComponent(encodedUid),marker=sharedMarkers[uid];
+  if(marker){map.setView(marker.getLatLng(),16);marker.openPopup();}
+}
+function refreshShared(){
+  if(!currentUser){alert(msg("loginFirst"));return;}
+  listenSharedLocations();
+}
+function escapeHTML(value){
+  return String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+}
+window.addEventListener("load",()=>{
+  initMap();
+  connectFirebase();
+});
+window.addEventListener("pagehide",()=>{
+  if(watchID!==null){navigator.geolocation.clearWatch(watchID);watchID=null;}
+});
+</script>
+</body>
+</html>
