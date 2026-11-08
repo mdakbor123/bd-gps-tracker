@@ -5,30 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#1264d8">
 <meta name="google-site-verification" content="qRDSuDo2iZ6ctYGFSfKIpCJWhId4ZC9Gzq06jcd6_hw">
-<title>BD GPS Tracker Global | সম্মতিভিত্তিক GPS লোকেশন শেয়ারিং</title>
-<meta name="description" content="BD GPS Tracker Global হলো বাংলাদেশ ও বিশ্বব্যাপী ব্যবহারের জন্য একটি GPS লোকেশন ওয়েব অ্যাপ। নিজের GPS অবস্থান দেখুন এবং স্পষ্ট সম্মতির মাধ্যমে অনুমোদিত ব্যবহারকারীদের সঙ্গে লোকেশন শেয়ার করুন।">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<link rel="canonical" href="https://mdakbor123.github.io/bd-gps-tracker/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="BD GPS Tracker Global">
-<meta property="og:description" content="নিজের GPS অবস্থান দেখুন এবং সম্মতি দিয়ে অনুমোদিত ব্যবহারকারীদের সঙ্গে শেয়ার করুন।">
-<meta property="og:url" content="https://mdakbor123.github.io/bd-gps-tracker/">
-<meta property="og:site_name" content="BD GPS Tracker Global">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="BD GPS Tracker Global">
-<meta name="twitter:description" content="Consent-based GPS location sharing for Bangladesh and worldwide.">
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"BD GPS Tracker Global",
-  "url":"https://mdakbor123.github.io/bd-gps-tracker/",
-  "applicationCategory":"UtilitiesApplication",
-  "operatingSystem":"Android, iOS, Windows, macOS, Linux",
-  "inLanguage":["bn","en"],
-  "description":"A GPS web application for viewing your own location and sharing it with approved users only after explicit consent."
-}
-</script>
+<title>BD GPS Tracker Global</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 :root{--blue:#1264d8;--dark:#08449b;--bg:#f3f7ff;--text:#17243a;--muted:#64748b;--white:#fff;--border:#dce6f5;--red:#c62828}
@@ -58,9 +35,8 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .data span{font-size:14px}
 .consent{display:flex;gap:9px;align-items:flex-start;background:#fff8e8;padding:12px;border-radius:9px;margin:12px 0}
 .consent input{margin-top:3px;transform:scale(1.2)}
-.consent label{line-height:1.5}
 .phone-item{border:1px solid var(--border);padding:12px;border-radius:10px;margin:9px 0;overflow-wrap:anywhere}
-.phone-item button{margin-top:8px}
+.phone-item a{display:inline-block;margin:7px 8px 0 0;color:var(--blue)}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
 @media(max-width:520px){.data-grid{grid-template-columns:1fr}#map{height:290px}.row>*{min-width:100%}}
 </style>
@@ -81,22 +57,22 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
 <h2 data-bn="🔐 অ্যাকাউন্ট লগইন / রেজিস্ট্রেশন" data-en="🔐 Account Login / Registration">🔐 অ্যাকাউন্ট লগইন / রেজিস্ট্রেশন</h2>
 <p class="small" data-bn="নিজের অ্যাকাউন্ট দিয়ে লগইন করুন। নতুন অ্যাকাউন্ট অ্যাডমিন অনুমোদনের অপেক্ষায় থাকবে।" data-en="Sign in with your own account. New accounts require admin approval.">নিজের অ্যাকাউন্ট দিয়ে লগইন করুন। নতুন অ্যাকাউন্ট অ্যাডমিন অনুমোদনের অপেক্ষায় থাকবে।</p>
 <label for="email" data-bn="ইমেইল" data-en="Email">ইমেইল</label>
-<input id="email" type="email" autocomplete="username" placeholder="আপনার ইমেইল">
+<input id="email" type="email" autocomplete="email" placeholder="আপনার ইমেইল">
 <label for="password" data-bn="পাসওয়ার্ড" data-en="Password">পাসওয়ার্ড</label>
 <input id="password" type="password" autocomplete="current-password" placeholder="পাসওয়ার্ড">
 <div class="row">
-<button type="button" onclick="registerUser()" data-bn="নতুন অ্যাকাউন্ট খুলুন" data-en="Create account">নতুন অ্যাকাউন্ট খুলুন</button>
-<button type="button" onclick="loginUser()" data-bn="লগইন করুন" data-en="Log in">লগইন করুন</button>
-<button type="button" class="secondary" onclick="logoutUser()" data-bn="লগআউট" data-en="Log out">লগআউট</button>
+<button onclick="registerUser()" data-bn="নতুন অ্যাকাউন্ট খুলুন" data-en="Create account">নতুন অ্যাকাউন্ট খুলুন</button>
+<button onclick="loginUser()" data-bn="লগইন করুন" data-en="Log in">লগইন করুন</button>
+<button class="secondary" onclick="logoutUser()" data-bn="লগআউট" data-en="Log out">লগআউট</button>
 </div>
-<div id="authStatus" class="status" role="status" aria-live="polite">Firebase সংযোগ হচ্ছে...</div>
+<div id="authStatus" class="status" role="status">Firebase সংযোগ হচ্ছে...</div>
 </section>
 <section class="card">
 <h2 data-bn="📍 আমার GPS লোকেশন" data-en="📍 My GPS Location">📍 আমার GPS লোকেশন</h2>
-<div id="gpsStatus" class="status" role="status" aria-live="polite">GPS বন্ধ আছে</div>
+<div id="gpsStatus" class="status">GPS বন্ধ আছে</div>
 <div class="row">
-<button type="button" onclick="startTracking()" data-bn="GPS চালু করুন" data-en="Start GPS">GPS চালু করুন</button>
-<button type="button" class="danger" onclick="stopTracking()" data-bn="GPS বন্ধ করুন" data-en="Stop GPS">GPS বন্ধ করুন</button>
+<button onclick="startTracking()" data-bn="GPS চালু করুন" data-en="Start GPS">GPS চালু করুন</button>
+<button class="danger" onclick="stopTracking()" data-bn="GPS বন্ধ করুন" data-en="Stop GPS">GPS বন্ধ করুন</button>
 </div>
 <div class="data-grid">
 <div class="data"><strong>Latitude</strong><span id="latitude">---</span></div>
@@ -105,8 +81,8 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
 <div class="data"><strong data-bn="সর্বশেষ আপডেট" data-en="Last Updated">সর্বশেষ আপডেট</strong><span id="lastUpdated">---</span></div>
 </div>
 <div class="row" style="margin-top:10px">
-<button type="button" class="secondary" onclick="copyLocation()" data-bn="লোকেশন কপি" data-en="Copy location">লোকেশন কপি</button>
-<button type="button" class="secondary" onclick="openGoogleMaps()" data-bn="Google Maps খুলুন" data-en="Open Google Maps">Google Maps খুলুন</button>
+<button class="secondary" onclick="copyLocation()" data-bn="লোকেশন কপি" data-en="Copy location">লোকেশন কপি</button>
+<button class="secondary" onclick="openGoogleMaps()" data-bn="Google Maps খুলুন" data-en="Open Google Maps">Google Maps খুলুন</button>
 </div>
 </section>
 <section class="card">
@@ -116,17 +92,14 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
 <input type="checkbox" id="shareConsent" onchange="changeSharing(this.checked)">
 <label for="shareConsent" style="margin:0;font-weight:500" data-bn="আমি সম্মতি দিচ্ছি যে GPS চালু থাকা অবস্থায় আমার বর্তমান লোকেশন অন্য অনুমোদিত লগইন করা ব্যবহারকারীরা দেখতে পারবেন।" data-en="I consent to let other approved signed-in users see my current location while GPS is running.">আমি সম্মতি দিচ্ছি যে GPS চালু থাকা অবস্থায় আমার বর্তমান লোকেশন অন্য অনুমোদিত লগইন করা ব্যবহারকারীরা দেখতে পারবেন।</label>
 </div>
-<div id="sharingStatus" class="status" role="status" aria-live="polite">লোকেশন শেয়ারিং বন্ধ আছে।</div>
+<div id="sharingStatus" class="status">লোকেশন শেয়ারিং বন্ধ আছে।</div>
 </section>
-<section class="card">
-<h2 data-bn="🗺️ ম্যাপ" data-en="🗺️ Map">🗺️ ম্যাপ</h2>
-<div id="map" aria-label="GPS map"></div>
-</section>
+<section class="card"><h2 data-bn="🗺️ ম্যাপ" data-en="🗺️ Map">🗺️ ম্যাপ</h2><div id="map" aria-label="GPS map"></div></section>
 <section class="card">
 <h2 data-bn="👥 সম্মতি দিয়ে শেয়ার করা লোকেশন" data-en="👥 Consensually Shared Locations">👥 সম্মতি দিয়ে শেয়ার করা লোকেশন</h2>
 <input id="nameSearch" type="text" placeholder="নাম দিয়ে খুঁজুন" oninput="renderSharedUsers()">
-<button type="button" class="secondary" onclick="refreshShared()" data-bn="তালিকা রিফ্রেশ" data-en="Refresh list">তালিকা রিফ্রেশ</button>
-<div id="sharedUsers" class="small" aria-live="polite">লগইন করলে শেয়ার করা ব্যবহারকারীদের তালিকা দেখাবে।</div>
+<button class="secondary" onclick="refreshShared()" data-bn="তালিকা রিফ্রেশ" data-en="Refresh list">তালিকা রিফ্রেশ</button>
+<div id="sharedUsers" class="small">লগইন করলে শেয়ার করা ব্যবহারকারীদের তালিকা দেখাবে।</div>
 </section>
 <section class="card">
 <h2 data-bn="🔒 গোপনীয়তা" data-en="🔒 Privacy">🔒 গোপনীয়তা</h2>
@@ -140,540 +113,229 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 "use strict";
-
 const firebaseConfig={
-  apiKey:"AIzaSyD7eyFrt6xkzzWvrBGRsV5e0fXxKB3O97Q",
-  authDomain:"bd-gps-tracker.firebaseapp.com",
-  databaseURL:"https://bd-gps-tracker-default-rtdb.firebaseio.com",
-  projectId:"bd-gps-tracker",
-  storageBucket:"bd-gps-tracker.firebasestorage.app",
-  messagingSenderId:"1055086540766",
-  appId:"1:1055086540766:web:7c6b8ca93b06098cb14f4f",
-  measurementId:"G-ZMSSHYR6SY"
+apiKey:"AIzaSyD7eyFrt6xkzzWvrBGRsV5e0fXxKB3O97Q",
+authDomain:"bd-gps-tracker.firebaseapp.com",
+databaseURL:"https://bd-gps-tracker-default-rtdb.firebaseio.com",
+projectId:"bd-gps-tracker",
+storageBucket:"bd-gps-tracker.firebasestorage.app",
+messagingSenderId:"1055086540766",
+appId:"1:1055086540766:web:7c6b8ca93b06098cb14f4f",
+measurementId:"G-ZMSSHYR6SY"
 };
-
-const SHARE_MAX_AGE=120000;
-let auth=null,database=null,currentUser=null,map=null,myMarker=null,accuracyCircle=null;
-let watchID=null,currentPosition=null,sharingEnabled=false,sharedListener=null;
-let sharedMarkers={},sharedUsersData=[],language="bn",accountApproved=false;
-
+let auth=null,database=null,currentUser=null,map=null,myMarker=null,accuracyCircle=null,watchID=null,currentPosition=null,sharingEnabled=false,sharedListener=null,sharedMarkers={},sharedUsersData=[],language="bn";
 const $=id=>document.getElementById(id);
 const translations={
- bn:{
-  firebaseFail:"Firebase সংযোগ ব্যর্থ: ",loginFirst:"প্রথমে লগইন করুন।",
-  gpsUnsupported:"এই ব্রাউজারে GPS সমর্থিত নয়।",gpsOn:"GPS চালু আছে।",
-  gpsOff:"GPS বন্ধ আছে।",shareOn:"লোকেশন শেয়ারিং চালু হয়েছে।",
-  shareOff:"লোকেশন শেয়ারিং বন্ধ আছে।",noUsers:"এই মুহূর্তে শেয়ার করা কোনো লোকেশন পাওয়া যায়নি।",
-  loginOk:"লগইন সফল।",logoutOk:"লগআউট হয়েছে।",
-  invalid:"সঠিক ইমেইল ও কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড দিন।",
-  approval:"আপনার অ্যাকাউন্ট এখনো অ্যাডমিন অনুমোদন পায়নি।",
-  profileError:"ব্যবহারকারীর প্রোফাইল সমস্যা: ",
-  startGpsFirst:"প্রথমে GPS চালু করুন এবং লোকেশন পাওয়া পর্যন্ত অপেক্ষা করুন।",
-  copied:"লোকেশন কপি হয়েছে।",startFirst:"আগে GPS চালু করুন।",
-  signedOut:"লগইন করলে শেয়ার করা ব্যবহারকারীদের তালিকা দেখাবে।",
-  gpsStarting:"GPS চালু করার চেষ্টা হচ্ছে।",mapFail:"ম্যাপ লোড হয়নি। ইন্টারনেট সংযোগ পরীক্ষা করুন।",
-  noLocation:"এখনো কোনো GPS লোকেশন পাওয়া যায়নি।",viewMap:"ম্যাপে দেখুন",
-  user:"ব্যবহারকারী",updated:"আপডেট"
- },
- en:{
-  firebaseFail:"Firebase connection failed: ",loginFirst:"Please log in first.",
-  gpsUnsupported:"GPS is not supported by this browser.",gpsOn:"GPS is running.",
-  gpsOff:"GPS is off.",shareOn:"Location sharing is on.",
-  shareOff:"Location sharing is off.",noUsers:"No shared locations are available right now.",
-  loginOk:"Login successful.",logoutOk:"Logged out.",
-  invalid:"Enter a valid email and a password of at least 6 characters.",
-  approval:"Your account has not been approved by the admin yet.",
-  profileError:"User profile error: ",
-  startGpsFirst:"Start GPS and wait until your location is available.",
-  copied:"Location copied.",startFirst:"Start GPS first.",
-  signedOut:"Sign in to view shared users.",
-  gpsStarting:"Starting GPS...",mapFail:"Map did not load. Check your internet connection.",
-  noLocation:"No GPS location is available yet.",viewMap:"View on map",
-  user:"User",updated:"Updated"
- }
+bn:{firebaseFail:"Firebase সংযোগ ব্যর্থ: ",loginFirst:"প্রথমে লগইন করুন।",gpsUnsupported:"এই ব্রাউজারে GPS সমর্থিত নয়।",gpsOn:"GPS চালু আছে।",gpsOff:"GPS বন্ধ আছে।",shareOn:"লোকেশন শেয়ারিং চালু হয়েছে।",shareOff:"লোকেশন শেয়ারিং বন্ধ আছে।",noUsers:"এই মুহূর্তে শেয়ার করা কোনো লোকেশন পাওয়া যায়নি।",loginOk:"লগইন সফল।",logoutOk:"লগআউট হয়েছে।",invalid:"সঠিক ইমেইল ও কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড দিন।",approval:"আপনার অ্যাকাউন্ট এখনো অ্যাডমিন অনুমোদন পায়নি।",profileError:"ব্যবহারকারীর প্রোফাইল সমস্যা: "},
+en:{firebaseFail:"Firebase connection failed: ",loginFirst:"Please log in first.",gpsUnsupported:"GPS is not supported by this browser.",gpsOn:"GPS is running.",gpsOff:"GPS is off.",shareOn:"Location sharing is on.",shareOff:"Location sharing is off.",noUsers:"No shared locations are available right now.",loginOk:"Login successful.",logoutOk:"Logged out.",invalid:"Enter a valid email and a password of at least 6 characters.",approval:"Your account has not been approved by the admin yet.",profileError:"User profile error: "}
 };
-
-function msg(key){return translations[language][key]||key}
-function setStatus(id,value){const el=$(id);if(el)el.textContent=value}
-function escapeHTML(value){
- return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function msg(k){return translations[language][k]||k}
+function setStatus(id,t){$(id).textContent=t}
+function setLanguage(v){
+language=v==="en"?"en":"bn";document.documentElement.lang=language;
+document.querySelectorAll("[data-bn][data-en]").forEach(e=>e.textContent=e.dataset[language]);
+$("email").placeholder=language==="bn"?"আপনার ইমেইল":"Your email";
+$("password").placeholder=language==="bn"?"পাসওয়ার্ড":"Password";
+$("nameSearch").placeholder=language==="bn"?"নাম দিয়ে খুঁজুন":"Search by user";
+if(!sharingEnabled)setStatus("sharingStatus",msg("shareOff"));
+renderSharedUsers();
 }
-
-function setLanguage(value){
- language=value==="en"?"en":"bn";
- document.documentElement.lang=language;
- $("language").value=language;
- document.querySelectorAll("[data-bn][data-en]").forEach(el=>{
-  el.textContent=el.dataset[language];
- });
- $("email").placeholder=language==="bn"?"আপনার ইমেইল":"Your email";
- $("password").placeholder=language==="bn"?"পাসওয়ার্ড":"Password";
- $("nameSearch").placeholder=language==="bn"?"নাম দিয়ে খুঁজুন":"Search by user";
- if(!sharingEnabled)setStatus("sharingStatus",msg("shareOff"));
- renderSharedUsers();
-}
-
 function credentials(){
- const email=$("email").value.trim();
- const password=$("password").value;
- if(!email||password.length<6){alert(msg("invalid"));return null;}
- return{email,password};
+const email=$("email").value.trim(),password=$("password").value;
+if(!email||password.length<6){alert(msg("invalid"));return null}
+return{email,password};
 }
-
-function firebaseError(error){
- const code=error&&error.code?error.code:"";
- const messages={
-  "auth/email-already-in-use":language==="bn"?"এই ইমেইল দিয়ে আগে অ্যাকাউন্ট খোলা হয়েছে।":"This email is already registered.",
-  "auth/invalid-email":language==="bn"?"ইমেইল ঠিক নয়।":"The email address is invalid.",
-  "auth/weak-password":language==="bn"?"আরও শক্তিশালী পাসওয়ার্ড দিন।":"Choose a stronger password.",
-  "auth/user-not-found":language==="bn"?"এই ইমেইলে অ্যাকাউন্ট পাওয়া যায়নি।":"No account was found for this email.",
-  "auth/wrong-password":language==="bn"?"পাসওয়ার্ড ভুল হয়েছে।":"Incorrect password.",
-  "auth/invalid-credential":language==="bn"?"ইমেইল অথবা পাসওয়ার্ড ভুল।":"Email or password is incorrect.",
-  "auth/too-many-requests":language==="bn"?"অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।":"Too many attempts. Try again later.",
-  "auth/network-request-failed":language==="bn"?"ইন্টারনেট সংযোগ পরীক্ষা করুন।":"Check your internet connection."
- };
- return messages[code]||((error&&error.message)||String(error));
-}
-
+/* Existing profiles are retained. New profiles are created pending admin approval. */
 async function ensureUserProfile(user){
- const ref=database.ref("users/"+user.uid);
- const snap=await ref.once("value");
- if(!snap.exists()){
-  await ref.set({
-   email:user.email||"",
-   role:"user",
-   approved:false,
-   shareLocation:false,
-   createdAt:Date.now()
-  });
-  return false;
- }
- const profile=snap.val()||{};
- if(typeof profile.email!=="string"||
-    typeof profile.role!=="string"||
-    typeof profile.approved!=="boolean"){
-  throw new Error("Profile fields are incomplete. Ask the administrator to check this user's database record.");
- }
- if(typeof profile.shareLocation!=="boolean"){
-  await ref.update({shareLocation:false});
- }
- return profile.approved===true;
+const ref=database.ref("users/"+user.uid);
+const snap=await ref.once("value");
+if(!snap.exists()){
+await ref.set({email:user.email||"",role:"user",approved:false,shareLocation:false,createdAt:Date.now()});
+return false;
 }
-
+const profile=snap.val()||{};
+if(typeof profile.email!=="string"||typeof profile.role!=="string"||typeof profile.approved!=="boolean"){
+throw new Error("Profile is missing required email, role, or approved fields. Ask the administrator to check the user record.");
+}
+if(typeof profile.shareLocation!=="boolean"){
+await ref.update({shareLocation:false});
+}
+return profile.approved===true;
+}
 function connectFirebase(){
- try{
-  if(!window.firebase)throw new Error("Firebase SDK did not load. Check internet access.");
-  if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
-  auth=firebase.auth();
-  database=firebase.database();
-
-  auth.onAuthStateChanged(async user=>{
-   currentUser=user;
-   sharingEnabled=false;
-   accountApproved=false;
-   $("shareConsent").checked=false;
-
-   if(!user){
-    setStatus("authStatus",language==="bn"?"লগইন করা নেই।":"Not signed in.");
-    detachSharedListener();
-    setStatus("sharingStatus",msg("shareOff"));
-    $("sharedUsers").textContent=msg("signedOut");
-    return;
-   }
-
-   setStatus("authStatus",(language==="bn"?"লগইন হয়েছে: ":"Signed in: ")+(user.email||""));
-   try{
-    accountApproved=await ensureUserProfile(user);
-
-    // A fresh page session requires fresh consent before publishing location.
-    await database.ref("users/"+user.uid).update({shareLocation:false});
-    await database.ref("sharedLocations/"+user.uid).remove();
-
-    if(accountApproved){
-     setStatus("sharingStatus",language==="bn"
-      ?"আপনার অ্যাকাউন্ট অনুমোদিত। GPS চালু করে সম্মতি দিন।"
-      :"Your account is approved. Start GPS and give consent.");
-     listenSharedLocations();
-    }else{
-     detachSharedListener();
-     setStatus("sharingStatus",msg("approval"));
-     $("sharedUsers").textContent=msg("approval");
-    }
-   }catch(error){
-    accountApproved=false;
-    detachSharedListener();
-    setStatus("sharingStatus",msg("profileError")+firebaseError(error));
-   }
-  },error=>{
-   setStatus("authStatus",msg("firebaseFail")+firebaseError(error));
-  });
- }catch(error){
-  setStatus("authStatus",msg("firebaseFail")+firebaseError(error));
- }
+try{
+if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+auth=firebase.auth();database=firebase.database();
+auth.onAuthStateChanged(async user=>{
+currentUser=user;sharingEnabled=false;$("shareConsent").checked=false;
+if(!user){
+setStatus("authStatus",language==="bn"?"লগইন করা নেই।":"Not signed in.");
+detachSharedListener();setStatus("sharingStatus",msg("shareOff"));
+$("sharedUsers").textContent=language==="bn"?"লগইন করলে শেয়ার করা ব্যবহারকারীদের তালিকা দেখাবে।":"Sign in to view shared users.";
+return;
 }
-
-async function registerUser(){
- const data=credentials();
- if(!data)return;
- if(!auth){alert(language==="bn"?"Firebase এখনো প্রস্তুত নয়। পেজ রিফ্রেশ করে আবার চেষ্টা করুন।":"Firebase is not ready. Refresh and try again.");return;}
- try{
-  await auth.createUserWithEmailAndPassword(data.email,data.password);
-  alert(language==="bn"
-   ?"অ্যাকাউন্ট তৈরি হয়েছে। অ্যাডমিন অনুমোদনের পর লোকেশন শেয়ার করতে পারবেন।"
-   :"Account created. Location sharing is available after admin approval.");
- }catch(error){alert(firebaseError(error));}
+setStatus("authStatus",(language==="bn"?"লগইন হয়েছে: ":"Signed in: ")+(user.email||""));
+try{
+const approved=await ensureUserProfile(user);
+/* A reload never silently resumes sharing: clear the old point and consent flag. */
+await database.ref("users/"+user.uid).update({shareLocation:false});
+await database.ref("sharedLocations/"+user.uid).remove();
+if(approved){
+setStatus("sharingStatus",language==="bn"?"আপনার অ্যাকাউন্ট অনুমোদিত। GPS চালু করে সম্মতি দিন।":"Your account is approved. Start GPS and give consent.");
+listenSharedLocations();
+}else{
+detachSharedListener();setStatus("sharingStatus",msg("approval"));
+$("sharedUsers").textContent=msg("approval");
 }
-
-async function loginUser(){
- const data=credentials();
- if(!data)return;
- if(!auth){alert(language==="bn"?"Firebase এখনো প্রস্তুত নয়। পেজ রিফ্রেশ করে আবার চেষ্টা করুন।":"Firebase is not ready. Refresh and try again.");return;}
- try{
-  await auth.signInWithEmailAndPassword(data.email,data.password);
-  alert(msg("loginOk"));
- }catch(error){alert(firebaseError(error));}
+}catch(e){
+detachSharedListener();setStatus("sharingStatus",msg("profileError")+e.message);
 }
-
-async function logoutUser(){
- if(!auth)return;
- try{
-  if(currentUser&&sharingEnabled)await revokeSharing();
-  await stopTracking(false);
-  await auth.signOut();
-  alert(msg("logoutOk"));
- }catch(error){alert(firebaseError(error));}
-}
-
-function startTracking(){
- if(!currentUser){alert(msg("loginFirst"));return;}
- if(!navigator.geolocation){alert(msg("gpsUnsupported"));return;}
- if(watchID!==null)return;
-
- setStatus("gpsStatus",msg("gpsStarting"));
- watchID=navigator.geolocation.watchPosition(
-  handlePosition,
-  error=>{
-   watchID=null;
-   const reason=error.code===1
-    ?(language==="bn"?"লোকেশন অনুমতি দেওয়া হয়নি। ব্রাউজার সেটিংসে GPS অনুমতি দিন।":"Location permission was denied. Allow location in browser settings.")
-    :error.code===2
-     ?(language==="bn"?"বর্তমান অবস্থান পাওয়া যাচ্ছে না।":"Current location is unavailable.")
-     :(language==="bn"?"লোকেশন পেতে সময় শেষ হয়েছে। আবার চেষ্টা করুন।":"Location request timed out. Try again.");
-   setStatus("gpsStatus",reason);
-  },
-  {enableHighAccuracy:true,maximumAge:5000,timeout:20000}
- );
-}
-
-function handlePosition(position){
- currentPosition=position;
- const coords=position.coords;
- const point=[coords.latitude,coords.longitude];
-
- $("latitude").textContent=coords.latitude.toFixed(6);
- $("longitude").textContent=coords.longitude.toFixed(6);
- $("accuracy").textContent=Math.round(coords.accuracy)+" m";
- $("lastUpdated").textContent=new Date(position.timestamp).toLocaleString();
- setStatus("gpsStatus",msg("gpsOn"));
-
- if(map){
-  if(!myMarker){
-   myMarker=L.marker(point).addTo(map);
-  }else{
-   myMarker.setLatLng(point);
-  }
-  myMarker.bindPopup(language==="bn"?"আপনার লোকেশন":"Your location");
-  if(!accuracyCircle){
-   accuracyCircle=L.circle(point,{radius:coords.accuracy,color:"#1264d8",fillOpacity:.08}).addTo(map);
-  }else{
-   accuracyCircle.setLatLng(point).setRadius(coords.accuracy);
-  }
-  if(!map._hasCenteredOnUser){
-   map.setView(point,15);
-   map._hasCenteredOnUser=true;
-  }
- }
- if(sharingEnabled){
-  publishLocation(position).catch(error=>{
-   setStatus("sharingStatus",(language==="bn"?"শেয়ার করতে সমস্যা: ":"Sharing error: ")+firebaseError(error));
-  });
- }
-}
-
-async function stopTracking(showMessage=true){
- if(watchID!==null){
-  navigator.geolocation.clearWatch(watchID);
-  watchID=null;
- }
- if(sharingEnabled)await revokeSharing();
- if(showMessage)setStatus("gpsStatus",msg("gpsOff"));
-}
-
-async function changeSharing(checked){
- if(!currentUser){
-  $("shareConsent").checked=false;
-  alert(msg("loginFirst"));
-  return;
- }
- if(!accountApproved){
-  $("shareConsent").checked=false;
-  setStatus("sharingStatus",msg("approval"));
-  return;
- }
- if(checked){
-  if(watchID===null||!currentPosition){
-   $("shareConsent").checked=false;
-   alert(msg("startGpsFirst"));
-   return;
-  }
-  try{
-   const profileSnap=await database.ref("users/"+currentUser.uid).once("value");
-   const profile=profileSnap.val();
-   if(!profile||profile.approved!==true){
-    $("shareConsent").checked=false;
-    accountApproved=false;
-    setStatus("sharingStatus",msg("approval"));
-    return;
-   }
-   await database.ref("users/"+currentUser.uid).update({shareLocation:true});
-   sharingEnabled=true;
-   await publishLocation(currentPosition);
-   $("shareConsent").checked=true;
-   setStatus("sharingStatus",msg("shareOn"));
-  }catch(error){
-   sharingEnabled=false;
-   $("shareConsent").checked=false;
-   try{
-    await database.ref("users/"+currentUser.uid).update({shareLocation:false});
-    await database.ref("sharedLocations/"+currentUser.uid).remove();
-   }catch(cleanupError){console.error("Sharing cleanup failed:",cleanupError);}
-   setStatus("sharingStatus",(language==="bn"?"শেয়ার করতে সমস্যা: ":"Sharing error: ")+firebaseError(error));
-  }
- }else{
-  await revokeSharing();
- }
-}
-
-async function publishLocation(position){
- if(!database||!currentUser||!sharingEnabled)return;
- const coords=position.coords;
- await database.ref("sharedLocations/"+currentUser.uid).set({
-  lat:coords.latitude,
-  lng:coords.longitude,
-  accuracy:coords.accuracy,
-  updatedAt:Date.now()
- });
-}
-
-async function revokeSharing(){
- sharingEnabled=false;
- $("shareConsent").checked=false;
- if(!currentUser||!database){
-  setStatus("sharingStatus",msg("shareOff"));
-  return;
- }
- try{
-  await database.ref("users/"+currentUser.uid).update({shareLocation:false});
-  await database.ref("sharedLocations/"+currentUser.uid).remove();
-  setStatus("sharingStatus",msg("shareOff"));
- }catch(error){
-  setStatus("sharingStatus",(language==="bn"?"শেয়ারিং বন্ধ করতে সমস্যা: ":"Could not stop sharing: ")+firebaseError(error));
-  throw error;
- }
-}
-
-function clearSharedMarkers(){
- Object.keys(sharedMarkers).forEach(uid=>{
-  if(map)map.removeLayer(sharedMarkers[uid]);
- });
- sharedMarkers={};
-}
-
-function detachSharedListener(){
- if(sharedListener&&database){
-  database.ref("sharedLocations").off("value",sharedListener);
- }
- sharedListener=null;
- sharedUsersData=[];
- clearSharedMarkers();
- renderSharedUsers();
-}
-
-function listenSharedLocations(){
- detachSharedListener();
- if(!database||!currentUser||!accountApproved)return;
-
- sharedListener=snapshot=>{
-  const now=Date.now();
-  const rows=[];
-  snapshot.forEach(child=>{
-   const uid=child.key;
-   const value=child.val()||{};
-   const valid=Number.isFinite(value.lat)&&
-    Number.isFinite(value.lng)&&
-    value.lat>=-90&&value.lat<=90&&
-    value.lng>=-180&&value.lng<=180&&
-    Number.isFinite(value.updatedAt)&&
-    now-value.updatedAt<=SHARE_MAX_AGE&&
-    value.updatedAt<=now+60000;
-
-   if(uid!==currentUser.uid&&valid){
-    rows.push({
-     uid:uid,
-     lat:value.lat,
-     lng:value.lng,
-     accuracy:Number.isFinite(value.accuracy)?value.accuracy:null,
-     updatedAt:value.updatedAt
-    });
-   }
-  });
-  sharedUsersData=rows;
-  renderSharedMarkers();
-  renderSharedUsers();
- };
-
- database.ref("sharedLocations").on("value",sharedListener,error=>{
-  setStatus("sharedUsers",(language==="bn"?"শেয়ার করা লোকেশন পড়তে সমস্যা: ":"Could not read shared locations: ")+firebaseError(error));
- });
-}
-
-function renderSharedMarkers(){
- if(!map||!window.L)return;
- const activeIds=new Set(sharedUsersData.map(item=>item.uid));
-
- Object.keys(sharedMarkers).forEach(uid=>{
-  if(!activeIds.has(uid)){
-   map.removeLayer(sharedMarkers[uid]);
-   delete sharedMarkers[uid];
-  }
- });
-
- sharedUsersData.forEach(item=>{
-  const shortId=item.uid.slice(0,7);
-  const popupText=(language==="bn"?"শেয়ার করা ব্যবহারকারী: ":"Shared user: ")+shortId;
-  if(!sharedMarkers[item.uid]){
-   sharedMarkers[item.uid]=L.marker([item.lat,item.lng]).addTo(map);
-  }else{
-   sharedMarkers[item.uid].setLatLng([item.lat,item.lng]);
-  }
-  sharedMarkers[item.uid].bindPopup(escapeHTML(popupText));
- });
-}
-
-function renderSharedUsers(){
- const container=$("sharedUsers");
- if(!container)return;
-
- if(!currentUser){
-  container.textContent=msg("signedOut");
-  return;
- }
- if(!accountApproved){
-  container.textContent=msg("approval");
-  return;
- }
-
- const term=$("nameSearch").value.trim().toLowerCase();
- const rows=sharedUsersData.filter(item=>item.uid.toLowerCase().includes(term));
- container.replaceChildren();
-
- if(rows.length===0){
-  container.textContent=msg("noUsers");
-  return;
- }
-
- rows.forEach(item=>{
-  const card=document.createElement("div");
-  card.className="phone-item";
-
-  const title=document.createElement("strong");
-  title.textContent=msg("user")+" "+item.uid.slice(0,7);
-  card.appendChild(title);
-
-  const details=document.createElement("p");
-  details.className="small";
-  details.textContent=
-   "Lat: "+item.lat.toFixed(6)+" · Lng: "+item.lng.toFixed(6)+
-   " · "+msg("updated")+": "+new Date(item.updatedAt).toLocaleString();
-  card.appendChild(details);
-
-  const viewButton=document.createElement("button");
-  viewButton.type="button";
-  viewButton.className="secondary";
-  viewButton.textContent=msg("viewMap");
-  viewButton.addEventListener("click",()=>{
-   if(map){
-    map.setView([item.lat,item.lng],16);
-    const marker=sharedMarkers[item.uid];
-    if(marker)marker.openPopup();
-   }
-  });
-  card.appendChild(viewButton);
-  container.appendChild(card);
- });
-}
-
-function refreshShared(){
- if(!currentUser){alert(msg("loginFirst"));return;}
- if(!accountApproved){setStatus("sharedUsers",msg("approval"));return;}
- listenSharedLocations();
-}
-
-async function copyLocation(){
- if(!currentPosition){alert(msg("noLocation"));return;}
- const coords=currentPosition.coords;
- const text=coords.latitude.toFixed(6)+", "+coords.longitude.toFixed(6);
- try{
-  if(navigator.clipboard&&window.isSecureContext){
-   await navigator.clipboard.writeText(text);
-  }else{
-   const temporary=document.createElement("textarea");
-   temporary.value=text;
-   temporary.style.position="fixed";
-   temporary.style.opacity="0";
-   document.body.appendChild(temporary);
-   temporary.select();
-   const copied=document.execCommand("copy");
-   temporary.remove();
-   if(!copied)throw new Error("Copy not supported");
-  }
-  alert(msg("copied"));
- }catch(error){
-  alert(language==="bn"?"কপি করা যায়নি। লোকেশন হাতে কপি করুন: "+text:"Could not copy. Copy this location: "+text);
- }
-}
-
-function openGoogleMaps(){
- if(!currentPosition){alert(msg("startFirst"));return;}
- const coords=currentPosition.coords;
- const url="https://www.google.com/maps?q="+encodeURIComponent(coords.latitude+","+coords.longitude);
- window.open(url,"_blank","noopener,noreferrer");
-}
-
-function initializeMap(){
- const mapElement=$("map");
- if(!mapElement)return;
- if(!window.L){
-  setStatus("gpsStatus",msg("mapFail"));
-  return;
- }
- try{
-  map=L.map("map").setView([23.8103,90.4125],6);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
-   maxZoom:19,
-   attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
-  }).addTo(map);
- }catch(error){
-  console.error("Map initialization failed:",error);
-  setStatus("gpsStatus",msg("mapFail"));
- }
-}
-
-document.addEventListener("DOMContentLoaded",()=>{
- setLanguage("bn");
- initializeMap();
- connectFirebase();
 });
-</script>
-</body>
-</html>
+}catch(e){setStatus("authStatus",msg("firebaseFail")+e.message)}
+}
+async function registerUser(){
+const c=credentials();if(!c||!auth)return;
+try{
+await auth.createUserWithEmailAndPassword(c.email,c.password);
+alert(language==="bn"?"অ্যাকাউন্ট তৈরি হয়েছে। অ্যাডমিন অনুমোদনের পর লোকেশন শেয়ার করতে পারবেন।":"Account created. Location sharing is available after admin approval.");
+}catch(e){alert(e.message)}
+}
+async function loginUser(){
+const c=credentials();if(!c||!auth)return;
+try{await auth.signInWithEmailAndPassword(c.email,c.password);alert(msg("loginOk"))}
+catch(e){alert(e.message)}
+}
+async function logoutUser(){
+if(!auth)return;
+try{
+if(currentUser&&sharingEnabled)await revokeSharing();
+stopTracking(false);await auth.signOut();alert(msg("logoutOk"));
+}catch(e){alert(e.message)}
+}
+function startTracking(){
+if(!currentUser){alert(msg("loginFirst"));return}
+if(!navigator.geolocation){alert(msg("gpsUnsupported"));return}
+if(watchID!==null)return;
+setStatus("gpsStatus",language==="bn"?"GPS চালু করার চেষ্টা হচ্ছে...":"Starting GPS...");
+watchID=navigator.geolocation.watchPosition(handlePosition,e=>{
+watchID=null;setStatus("gpsStatus",(language==="bn"?"GPS সমস্যা: ":"GPS error: ")+e.message);
+},{enableHighAccuracy:true,maximumAge:5000,timeout:20000});
+}
+function handlePosition(p){
+currentPosition=p;const c=p.coords,lat=c.latitude,lng=c.longitude;
+$("latitude").textContent=lat.toFixed(6);$("longitude").textContent=lng.toFixed(6);
+$("accuracy").textContent=Math.round(c.accuracy)+" m";
+$("lastUpdated").textContent=new Date(p.timestamp).toLocaleString();
+setStatus("gpsStatus",msg("gpsOn"));
+const point=[lat,lng];
+if(!myMarker)myMarker=L.marker(point).addTo(map).bindPopup(language==="bn"?"আপনার লোকেশন":"Your location");
+else myMarker.setLatLng(point);
+if(!accuracyCircle)accuracyCircle=L.circle(point,{radius:c.accuracy,color:"#1264d8",fillOpacity:.08}).addTo(map);
+else accuracyCircle.setLatLng(point).setRadius(c.accuracy);
+if(!map._hasCenteredOnUser){map.setView(point,15);map._hasCenteredOnUser=true}
+if(sharingEnabled)publishLocation(p).catch(e=>setStatus("sharingStatus",(language==="bn"?"শেয়ার করতে সমস্যা: ":"Sharing error: ")+e.message));
+}
+async function stopTracking(showMessage=true){
+if(watchID!==null){navigator.geolocation.clearWatch(watchID);watchID=null}
+if(sharingEnabled)await revokeSharing();
+if(showMessage)setStatus("gpsStatus",msg("gpsOff"));
+}
+async function changeSharing(checked){
+if(!currentUser){$("shareConsent").checked=false;alert(msg("loginFirst"));return}
+if(checked){
+if(watchID===null||!currentPosition){
+$("shareConsent").checked=false;
+alert(language==="bn"?"প্রথমে GPS চালু করুন এবং লোকেশন পাওয়া পর্যন্ত অপেক্ষা করুন।":"Start GPS and wait until your location is available.");return;
+}
+try{
+const profileRef=database.ref("users/"+currentUser.uid);
+const snap=await profileRef.once("value"),profile=snap.val();
+if(!profile||profile.approved!==true){
+$("shareConsent").checked=false;setStatus("sharingStatus",msg("approval"));return;
+}
+await profileRef.update({shareLocation:true});
+sharingEnabled=true;await publishLocation(currentPosition);
+$("shareConsent").checked=true;setStatus("sharingStatus",msg("shareOn"));
+}catch(e){
+sharingEnabled=false;$("shareConsent").checked=false;
+try{await database.ref("users/"+currentUser.uid).update({shareLocation:false})}catch(ignore){}
+setStatus("sharingStatus",(language==="bn"?"শেয়ার করতে সমস্যা: ":"Sharing error: ")+e.message);
+}
+}else{await revokeSharing()}
+}
+async function publishLocation(p){
+if(!database||!currentUser||!sharingEnabled)return;
+const c=p.coords;
+await database.ref("sharedLocations/"+currentUser.uid).set({
+lat:c.latitude,lng:c.longitude,updatedAt:Date.now()
+});
+}
+async function revokeSharing(){
+sharingEnabled=false;$("shareConsent").checked=false;
+if(database&&currentUser){
+let firstError=null;
+try{await database.ref("users/"+currentUser.uid).update({shareLocation:false})}
+catch(e){firstError=e}
+try{await database.ref("sharedLocations/"+currentUser.uid).remove()}
+catch(e){firstError=firstError||e}
+if(firstError){
+setStatus("sharingStatus",(language==="bn"?"শেয়ারিং বন্ধ করতে সমস্যা: ":"Could not stop sharing: ")+firstError.message);return;
+}
+}
+setStatus("sharingStatus",msg("shareOff"));
+}
+async function copyLocation(){
+if(!currentPosition){alert(language==="bn"?"আগে GPS চালু করুন।":"Start GPS first.");return}
+const c=currentPosition.coords,text=`${c.latitude}, ${c.longitude}`;
+try{await navigator.clipboard.writeText(text);alert(language==="bn"?"লোকেশন কপি হয়েছে।":"Location copied.")}
+catch(e){prompt(language==="bn"?"লোকেশন কপি করুন:":"Copy location:",text)}
+}
+function openGoogleMaps(){
+if(!currentPosition){alert(language==="bn"?"আগে GPS চালু করুন।":"Start GPS first.");return}
+const c=currentPosition.coords;
+window.open(`https://www.google.com/maps?q=${c.latitude},${c.longitude}`,"_blank","noopener");
+}
+function initMap(){
+map=L.map("map").setView([23.8103,90.4125],6);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap contributors"}).addTo(map);
+}
+function detachSharedListener(){
+if(sharedListener&&database)database.ref("sharedLocations").off("value",sharedListener);
+sharedListener=null;
+Object.values(sharedMarkers).forEach(m=>{if(map)map.removeLayer(m)});
+sharedMarkers={};sharedUsersData=[];renderSharedUsers();
+}
+function listenSharedLocations(){
+if(!database||!currentUser)return;
+detachSharedListener();
+sharedListener=snapshot=>{
+const users=snapshot.val()||{},active=[];sharedUsersData=[];
+Object.keys(users).forEach(uid=>{
+const u=users[uid];if(!u)return;
+const lat=Number(u.lat),lng=Number(u.lng),stamp=Number(u.updatedAt);
+if(!Number.isFinite(lat)||!Number.isFinite(lng)||lat < -90||lat > 90||lng < -180||lng > 180)return;
+if(!Number.isFinite(stamp)||Date.now()-stamp>120000||stamp>Date.now()+60000)return;
+active.push(uid);if(uid===currentUser.uid)return;
+const name="User "+uid.slice(0,8);
+sharedUsersData.push({uid,name,latitude:lat,longitude:lng,timestamp:stamp});
+if(sharedMarkers[uid])sharedMarkers[uid].setLatLng([lat,lng]);
+else sharedMarkers[uid]=L.marker([lat,lng]).addTo(map);
+sharedMarkers[uid].bindPopup(escapeHTML(name)+"<br>"+lat.toFixed(6)+", "+lng.toFixed(6));
+});
+Object.keys(sharedMarkers).forEach(uid=>{
+if(!active.includes(uid)){map.removeLayer(sharedMarkers[uid]);delete sharedMarkers[uid]}
+});
+renderSharedUsers();
+};
+database.ref("sharedLocations").on("value",sharedListener,e=>{
+setStatus("sharedUsers",(language==="bn"?"ডাটাবেস সমস্যা: ":"Database error: ")+e.message);
+});
+}
+function renderSharedUsers(){
+if(!$("nameSearch")||!$("sharedUsers"))return;
+const search=$("nameSearch").value.trim().toLowerCase();
+const results=sharedUsersData.filter(u=>u.name.toLowerCase().includes(search));
+if(!results.length){$("sharedUsers").textContent=msg("noUsers");return}
+$("sharedUsers").innerHTML=results.map(u=>{
+const name=escapeHTML(u.name),date=u.timestamp?new Date(u.timestamp).toLocaleString():"Unknown";
+return `<div class="phone-item"><strong>📍 ${name}</strong><div>Latitude: ${u.latitude.toFixed(6)}</div><div>Longitude: ${u.longitude.toFixed(6)}</div><div>Updated: ${escapeHTML(date)}</div><button onclick="focusShared('${enco
